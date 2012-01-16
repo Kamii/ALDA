@@ -1,0 +1,24 @@
+# Installera JUnit4
+	sudo apt-get install junit4
+
+# Använd denna för att sätta classpath. 
+	export CLASSPATH=$CLASSPATH:$.:/usr/share/java/junit4.jar
+
+# Testa JUnit
+	java org.junit.runner.JUnitCore
+
+# för hoppningsvis så kommer det funka bra och du kommer få en output i stil med: 
+	> JUnit version 4.8.2
+	
+	> Time: 0,001
+	
+	> OK (0 tests)
+
+# För att köra ett testfall skriver man in följande
+	javac TestFall.java
+	java org.junit.runner.JUnitCore TestFall
+
+
+
+
+
