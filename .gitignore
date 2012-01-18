@@ -1,2 +1,5 @@
 # Ignore .swp files
 *.swp
+
+# Ignore .class ofc
+*.class
