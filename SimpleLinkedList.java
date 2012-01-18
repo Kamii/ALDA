@@ -1,5 +1,3 @@
-package alda;
-
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
@@ -8,8 +6,7 @@ import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
 /**
- * Dokumentationen för metoderna finns i interfacet.
- * 
+ * Dokumentationen for metoderna finns i interfacet.
  * @author henrikbe
  */
 public class SimpleLinkedList<E> implements List<E> {
@@ -18,6 +15,7 @@ public class SimpleLinkedList<E> implements List<E> {
 		public E data;
 		public Element<E> prev;
 		public Element<E> next;
+		public boolean deleted = false; 
 
 		public Element() {
 
@@ -29,6 +27,7 @@ public class SimpleLinkedList<E> implements List<E> {
 			this.next = next;
 			prev.next = this;
 			next.prev = this;
+
 		}
 	}
 
@@ -49,24 +48,54 @@ public class SimpleLinkedList<E> implements List<E> {
 			throw new UnsupportedOperationException("add is not supported");
 		}
 
+		/*
+		 * Denna ska vi kommentera
+		 */
 		@Override
 		public boolean hasNext() {
-			return current.next != tail;
+			Element<E> tmp = current;
+
+			while(tmp.next != tail && tmp.next.deleted)
+			{
+				tmp = tmp.next;
+			}
+			if(tmp.next != tail)
+				return true;
+			else
+				return false;
 		}
 
+		/*
+		 * Denna ska vi kommentera
+		 */
 		@Override
 		public boolean hasPrevious() {
-			return current != head;
+			Element<E> tmp = current;
+
+			while(tmp != head && tmp.prev.deleted)
+			{
+				tmp = tmp.prev;
+			}
+			if(tmp != head)
+				return true;
+			else
+				return false;
 		}
 
+		/*
+		 * Denna ska vi kommentera
+		 */
 		@Override
 		public E next() {
 			if (!hasNext())
 				throw new NoSuchElementException();
 			if (modCount != expectedModCount)
 				throw new ConcurrentModificationException();
+			do
+			{
+				current = current.next;
+			}while(current.deleted);
 
-			current = current.next;
 			currentIndex++;
 			return current.data;
 		}
@@ -76,17 +105,22 @@ public class SimpleLinkedList<E> implements List<E> {
 			return currentIndex;
 		}
 
+		/*
+		 * Denna ska vi kommentera
+		 */
 		@Override
 		public E previous() {
 			if (!hasPrevious())
 				throw new NoSuchElementException();
 			if (modCount != expectedModCount)
 				throw new ConcurrentModificationException();
-
 			E data = current.data;
-			current = current.prev;
-			currentIndex--;
+			do
+			{
+				current = current.prev;
+			}while(current.deleted);
 
+			currentIndex--;
 			return data;
 		}
 
@@ -110,6 +144,7 @@ public class SimpleLinkedList<E> implements List<E> {
 
 	private int size;
 	private int modCount;
+	private int sumDeleted;
 	private Element<E> head;
 	private Element<E> tail;
 
@@ -124,12 +159,19 @@ public class SimpleLinkedList<E> implements List<E> {
 					upperBoundary));
 	}
 
+	/*
+	 * Denna ska vi kommentera
+	 */
 	private Element<E> getElement(int index) {
-		// Inga indatakontroller eftersom vi litar på de andra metoderna i
+		// Inga indatakontroller eftersom vi litar pa de andra metoderna i
 		// klassen.
 		Element<E> temp = head;
 		for (int n = 0; n < index; n++)
+		{
 			temp = temp.next;
+			if(temp.deleted)
+				index++;
+		}
 		return temp;
 	}
 
@@ -164,6 +206,9 @@ public class SimpleLinkedList<E> implements List<E> {
 		return c.size() > 0;
 	}
 
+	/*
+	 * Denna ska vi kommentera
+	 */
 	@Override
 	public void clear() {
 		head = new Element<E>();
@@ -171,6 +216,7 @@ public class SimpleLinkedList<E> implements List<E> {
 		head.next = tail;
 		tail.prev = head;
 		size = 0;
+		sumDeleted = 0; //Raknare for samtliga element som ar markerade som deleted
 		modCount++;
 	}
 
@@ -202,11 +248,12 @@ public class SimpleLinkedList<E> implements List<E> {
 	public int indexOf(Object o) {
 		int index = 0;
 		for (E element : this)
+		{
 			if (o == null ? element == null : o.equals(element))
 				return index;
 			else
 				index++;
-
+		}
 		return -1;
 	}
 
@@ -222,7 +269,6 @@ public class SimpleLinkedList<E> implements List<E> {
 
 	@Override
 	public int lastIndexOf(Object o) {
-		int index = size() - 1;
 		ListIterator<E> iterator = listIterator(size());
 		while (iterator.hasPrevious()) {
 			E element = iterator.previous();
@@ -254,19 +300,46 @@ public class SimpleLinkedList<E> implements List<E> {
 		}
 	}
 
+	/*
+	 * denna ska vi kommentera 	
+	 */
 	@Override
 	public E remove(int index) {
 		checkIndex(index, size() - 1);
-
-		Element<E> previous = getElement(index);
-		E data = previous.next.data;
-		previous.next.next.prev = previous;
-		previous.next = previous.next.next;
-
+		
+		Element<E> removed = getElement(index+1);
+		E data = removed.data;
+		
+		// Delete pa elementet pa index
+		getElement(index+1).deleted = true;
+		sumDeleted++;
 		size--;
+
+		if(sumDeleted >= (size()+sumDeleted)/2)
+			deleteAllDeleted();
+
 		modCount++;
 
 		return data;
+	}
+
+	/*
+	 * denna ska vi kommentera 	
+	 */
+	private void deleteAllDeleted()
+	{
+		Element<E> element = head;
+
+		while(element != tail)
+	 	{
+			if(element.next.deleted)
+			{
+				element.next.next.prev = element;
+				element.next = element.next.next;
+			}
+			element = element.next;
+		}
+		sumDeleted = 0;
 	}
 
 	@Override
@@ -292,7 +365,6 @@ public class SimpleLinkedList<E> implements List<E> {
 				changed = true;
 			}
 		}
-
 		return changed;
 	}
 
@@ -319,15 +391,14 @@ public class SimpleLinkedList<E> implements List<E> {
 			buffer.append(iter.next());
 			if (iter.hasNext())
 				buffer.append(", ");
-
 		}
 		buffer.append("]");
 
 		return buffer.toString();
 	}
 
-	// Här nedanför bryter vi mot kontraktet för listan. Metoderna är inte
-	// "optional", men de tillför inget till uppgiften.
+	// Har nedanfor bryter vi mot kontraktet for listan. Metoderna ar inte
+	// "optional", men de tillfor inget till uppgiften.
 
 	@Override
 	public List<E> subList(int fromIndex, int toIndex) {
@@ -345,3 +416,4 @@ public class SimpleLinkedList<E> implements List<E> {
 	}
 
 }
+
