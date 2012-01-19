@@ -1,0 +1,116 @@
+% Alla i gruppen ska lämna in individuellt i Moodle. 
+% Det ska dock vara samma fil för alla så att vi kan se vilka som har jobbat ihop.
+\documentclass[a4paper,10pt,oneside,onecolumn]{article}
+
+\usepackage[swedish]{babel}
+
+% Får ni problem med att pdf-filen ser suddig ut på skärmen så beror det på att ni inte har 
+% en fullständig fontuppsättning och att bitmappade fonter i fel skala används. Den bästa lösningen 
+% är att uppdatera fontuppsättningen, men man kan också plocka bort denna rad. Avstavning fungerar 
+% dock betydligt sämre då.
+\usepackage[T1]{fontenc}
+
+\usepackage[latin1]{inputenc}
+\usepackage{a4wide}
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{textcomp}
+\lstset{language=Java, tabsize=3, numbers=left, frame=line}
+
+% Glöm inte att uppdatera rubriken
+
+\title{ALDA VT12: Linjära datastrukturer samt introduktion till algoritmanalys}
+
+% Sortera gruppdeltagarna efter Efternamn. Om två personer har samma efternamn sorteras dessa efter förnamnen.
+% Detta är viktigt eftersom vissa uppgifter bestäms av i vilken ordning namnen står. Tar man fel uppgift vid någon av dessa tillfällen blir man automatiskt underkänd.
+\author{Leon Hennings\\leonh \and Kamyar Sajjadi\\kamy-saj}
+
+\begin{document}
+
+\maketitle
+
+\section{Lazy Deletion}
+\lstinputlisting{SimpleLinkedList.java}
+
+\section{Två stackar i en array}
+\lstinputlisting{DoubleStack.java}
+
+\section{Algoritmanalys}
+
+Denna loop itererar n gånger när n=10 så blir summan 10. Det innebär att komplexiteten är linjär O(N).
+Vid 10 iterationer tar det ca 600 nanosekunder. När vi ökar n till 100 tar det ca 1300 nanosekunder. 
+\begin{lstlisting}
+//Exempel 1
+int sum = 0 ;
+for(int i = 0; i<n ;i++)
+	sum++;
+\end{lstlisting}
+
+Exempel 2 kommer att ökas kvadratiskt O(N2). Eftersom det är två loopar som har O(N) dvs är linjära så blir tidskomplexiteten N * N = N2.
+För varje varv i den övre loopen kommer den undre loopen gå n gånger. Vid mätning med nanosekunder ger n=10 ca 2900 nanosekunder samt n=100 tar det ca 160000 nanosekunder. 
+
+\begin{lstlisting}
+//Exempel 2
+int sum = 0 ;
+for (int i = 0 ; i<n ; i++)
+	for (int j = 0; j<n; j++)
+		sum++;
+\end{lstlisting}
+
+\begin{lstlisting}
+//Exempel 3
+int sum = 0 ;
+for (int i=0; i<n; i++)
+	for (j=0; j<n*n; j++)
+		sum++;
+\end{lstlisting}
+
+\begin{lstlisting}
+//Exempel 4
+int sum = 0 ;
+for (int i = 0; i<n; i++)
+	for (int j = 0; j<i ; j++)
+		sum++;
+\end{lstlisting}
+
+\begin{lstlisting}
+//Exempel 5
+int sum = 0 ;
+for (int i=0; i<n ; i++)
+	for (int j=0; j<i*i ; j++)
+		for (int k=0; k<j; k++)
+			sum++;
+\end{lstlisting}
+
+\begin{lstlisting}
+//Exempel 6
+int sum = 0 ;
+for (int i=1; i<n; i++)
+	for (int j=1; j<i*i ; j++)
+		if ( j % i == 0 )
+			for (int k=0; k<j; k++)
+				sum++;
+\end{lstlisting}
+%\lstinputlisting{SimpleLinkedList.java}
+
+%\lstinputlisting[firstline=3, lastline=5]{SimpleLinkedList.java}
+
+% För att referena till en bild skriver man ''se figur \ref{fig:exempelbild}''.
+
+\begin{figure}[htbp]
+	\centering
+%		\includegraphics[width=1.00\textwidth]{bild}
+	\caption{exempelbild}
+	%\label{fig:exempelbild}
+\end{figure}
+
+% Nedanstående är bara för om ni vill använda bibtex för att hantera referenser. 
+
+%\bibliographystyle{plain}
+%\bibliography{bibtex}
+%\bibdata{bibtex}
+
+
+\end{document}
