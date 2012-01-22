@@ -9,19 +9,22 @@ import java.util.NoSuchElementException;
  * Dokumentationen for metoderna finns i interfacet.
  * @author henrikbe
  */
-public class SimpleLinkedList<E> implements List<E> {
+public class SimpleLinkedList<E> implements List<E> 
+{
 
-	private static class Element<E> {
+	private static class Element<E> 
+	{
 		public E data;
 		public Element<E> prev;
 		public Element<E> next;
 		public boolean deleted = false; 
 
-		public Element() {
-
+		public Element() 
+		{
 		}
 
-		public Element(E data, Element<E> prev, Element<E> next) {
+		public Element(E data, Element<E> prev, Element<E> next) 
+		{
 			this.data = data;
 			this.prev = prev;
 			this.next = next;
@@ -31,28 +34,37 @@ public class SimpleLinkedList<E> implements List<E> {
 		}
 	}
 
-	private class SimpleLinkedListIterator implements ListIterator<E> {
+	private class SimpleLinkedListIterator implements ListIterator<E> 
+	{
 
 		private Element<E> current;
 		private int currentIndex;
 		private int expectedModCount;
 
-		public SimpleLinkedListIterator(Element<E> current, int currentIndex) {
+		public SimpleLinkedListIterator(Element<E> current, int currentIndex) 
+		{
 			this.current = current;
 			this.currentIndex = currentIndex;
 			this.expectedModCount = modCount;
 		}
 
 		@Override
-		public void add(E element) {
+		public void add(E element) 
+		{
 			throw new UnsupportedOperationException("add is not supported");
 		}
 
 		/*
-		 * Denna ska vi kommentera
+		 * hasNext() kommer att returnera true om current 
+		 * element har en next som ej är deleted. Om next 
+		 * är markerad som deleted så ska den gå vidare 
+		 * till nästa element. Detta kommer att ske tills 
+		 * vi kommer till ett objekt som ej är marketat som 
+		 * deleted och ej är tail:n.
 		 */
 		@Override
-		public boolean hasNext() {
+		public boolean hasNext() 
+		{
 			Element<E> tmp = current;
 
 			while(tmp.next != tail && tmp.next.deleted)
@@ -66,10 +78,15 @@ public class SimpleLinkedList<E> implements List<E> {
 		}
 
 		/*
-		 * Denna ska vi kommentera
+		 * Denna metod är i stortsätt som hasNext().
+		 *  Skillnaden är att den kollar om det finns en 
+		 * prev i current. Den gör givetvis samma kontroll 
+		 * så att inte prev är deleted, om den är flaggad 
+		 * som deleted så går den vidare och kollar föregående. 
 		 */
 		@Override
-		public boolean hasPrevious() {
+		public boolean hasPrevious() 
+		{
 			Element<E> tmp = current;
 
 			while(tmp != head && tmp.prev.deleted)
@@ -83,10 +100,15 @@ public class SimpleLinkedList<E> implements List<E> {
 		}
 
 		/*
-		 * Denna ska vi kommentera
+		 * next() returnera <E> från nästa Element. Om nästa 
+		 * är flaggad som deleted så kommer den att loopa 
+		 * tills ett element hittas som ej är flaggat som deleted. 
+		 * När elementet är hittat så kommer iteratorns 
+		 * "pekare" att ändras fram ett steg. 
 		 */
 		@Override
-		public E next() {
+		public E next() 
+		{
 			if (!hasNext())
 				throw new NoSuchElementException();
 			if (modCount != expectedModCount)
@@ -94,22 +116,28 @@ public class SimpleLinkedList<E> implements List<E> {
 			do
 			{
 				current = current.next;
-			}while(current.deleted);
+			} while (current.deleted);
 
 			currentIndex++;
 			return current.data;
 		}
 
 		@Override
-		public int nextIndex() {
+		public int nextIndex() 
+		{
 			return currentIndex;
 		}
 
 		/*
-		 * Denna ska vi kommentera
+		 * Metoden returnerar föregåendes data och flyttar
+		 * iteratorn ett steg bakåt. Om det föregående elementet 
+		 * är deleted så ska iteratorn ej ställa sig på det 
+		 * utan den ska loopa tills den hittar ett objekt som 
+		 * ej är deleted och ställa sig där.
 		 */
 		@Override
-		public E previous() {
+		public E previous() 
+		{
 			if (!hasPrevious())
 				throw new NoSuchElementException();
 			if (modCount != expectedModCount)
@@ -118,41 +146,44 @@ public class SimpleLinkedList<E> implements List<E> {
 			do
 			{
 				current = current.prev;
-			}while(current.deleted);
+			} while (current.deleted); //fortsätt så länge deleted är sant
 
 			currentIndex--;
 			return data;
 		}
 
 		@Override
-		public int previousIndex() {
+		public int previousIndex() 
+		{
 			return currentIndex - 1;
 		}
 
 		@Override
-		public void remove() {
+		public void remove() 
+		{
 			throw new UnsupportedOperationException("remove is not supported");
-
 		}
 
 		@Override
-		public void set(E element) {
+		public void set(E element) 
+		{
 			throw new UnsupportedOperationException("set is not supported");
 		}
-
 	}
 
 	private int size;
 	private int modCount;
-	private int sumDeleted;
+	private int sumDeleted; // Summan av samtliga som är flaggade som deleted
 	private Element<E> head;
 	private Element<E> tail;
 
-	public SimpleLinkedList() {
+	public SimpleLinkedList() 
+	{
 		clear();
 	}
 
-	private void checkIndex(int index, int upperBoundary) {
+	private void checkIndex(int index, int upperBoundary) 
+	{
 		if (index < 0 || index > upperBoundary)
 			throw new IndexOutOfBoundsException(String.format(
 					"Illegal index %d. Acceptable range is 0 to %d", index,
@@ -160,11 +191,17 @@ public class SimpleLinkedList<E> implements List<E> {
 	}
 
 	/*
-	 * Denna ska vi kommentera
+	 * Hämtar det Element som ligger på det angivna 
+	 * indexet. Den börjar i head.next, dvs det
+	 * första Elementet i vår länkade lista. Sedan 
+	 * så stegar den fram tills den kommit till
+	 * det angivna indexet. Om Elementet är flaggat 
+	 * som deleted så kommer index att ökas med 1.
+	 * Detta innebär att ett extra varv kommer att 
+	 * köras för varje Element som är deleted.  
 	 */
-	private Element<E> getElement(int index) {
-		// Inga indatakontroller eftersom vi litar pa de andra metoderna i
-		// klassen.
+	private Element<E> getElement(int index) 
+	{
 		Element<E> temp = head;
 		for (int n = 0; n < index; n++)
 		{
@@ -176,7 +213,8 @@ public class SimpleLinkedList<E> implements List<E> {
 	}
 
 	@Override
-	public boolean add(E element) {
+	public boolean add(E element) 
+	{
 		new Element<E>(element, tail.prev, tail);
 		size++;
 		modCount++;
@@ -184,7 +222,8 @@ public class SimpleLinkedList<E> implements List<E> {
 	}
 
 	@Override
-	public void add(int index, E element) {
+	public void add(int index, E element) 
+	{
 		checkIndex(index, size());
 		Element<E> temp = getElement(index);
 		new Element<E>(element, temp, temp.next);
@@ -193,59 +232,64 @@ public class SimpleLinkedList<E> implements List<E> {
 	}
 
 	@Override
-	public boolean addAll(Collection<? extends E> c) {
+	public boolean addAll(Collection<? extends E> c) 
+	{
 		for (E element : c)
 			add(element);
 		return c.size() > 0;
 	}
 
 	@Override
-	public boolean addAll(int index, Collection<? extends E> c) {
+	public boolean addAll(int index, Collection<? extends E> c) 
+	{
 		for (E element : c)
 			add(index++, element);
 		return c.size() > 0;
 	}
 
 	/*
-	 * Denna ska vi kommentera
+	 * I denna metod har vi lagt till sumDeleted
 	 */
 	@Override
-	public void clear() {
+	public void clear() 
+	{
 		head = new Element<E>();
 		tail = new Element<E>();
 		head.next = tail;
 		tail.prev = head;
 		size = 0;
-		sumDeleted = 0; //Raknare for samtliga element som ar markerade som deleted
+		sumDeleted = 0; // sumDeleted sätts till 0
 		modCount++;
 	}
 
 	@Override
-	public boolean contains(Object o) {
+	public boolean contains(Object o) 
+	{
 		for (E element : this)
 			if (o == null ? element == null : o.equals(element))
 				return true;
-
 		return false;
 	}
 
 	@Override
-	public boolean containsAll(Collection<?> c) {
+	public boolean containsAll(Collection<?> c) 
+	{
 		for (Object o : c)
 			if (!contains(o))
 				return false;
-
 		return true;
 	}
 
 	@Override
-	public E get(int index) {
+	public E get(int index) 
+	{
 		checkIndex(index, size() - 1);
 		return getElement(index + 1).data;
 	}
 
 	@Override
-	public int indexOf(Object o) {
+	public int indexOf(Object o) 
+	{
 		int index = 0;
 		for (E element : this)
 		{
@@ -258,19 +302,23 @@ public class SimpleLinkedList<E> implements List<E> {
 	}
 
 	@Override
-	public boolean isEmpty() {
+	public boolean isEmpty() 
+	{
 		return size() == 0;
 	}
 
 	@Override
-	public Iterator<E> iterator() {
+	public Iterator<E> iterator() 
+	{
 		return listIterator();
 	}
 
 	@Override
-	public int lastIndexOf(Object o) {
+	public int lastIndexOf(Object o) 
+	{
 		ListIterator<E> iterator = listIterator(size());
-		while (iterator.hasPrevious()) {
+		while (iterator.hasPrevious()) 
+		{
 			E element = iterator.previous();
 			if (o == null ? element == null : o.equals(element))
 				return iterator.nextIndex();
@@ -279,52 +327,64 @@ public class SimpleLinkedList<E> implements List<E> {
 	}
 
 	@Override
-	public ListIterator<E> listIterator() {
+	public ListIterator<E> listIterator() 
+	{
 		return new SimpleLinkedListIterator(head, 0);
 	}
 
 	@Override
-	public ListIterator<E> listIterator(int index) {
+	public ListIterator<E> listIterator(int index) 
+	{
 		checkIndex(index, size());
 		return new SimpleLinkedListIterator(getElement(index), index);
 	}
 
 	@Override
-	public boolean remove(Object o) {
+	public boolean remove(Object o) 
+	{
 		int index = indexOf(o);
-		if (index >= 0) {
+		if (index >= 0) 
+		{
 			remove(index);
 			return true;
-		} else {
+		} 
+		else 
+		{
 			return false;
 		}
 	}
 
 	/*
-	 * denna ska vi kommentera 	
+	 * Markerar elementet som deleted samt att den tar 
+	 * bort datan som elementet håller. När hälften av 
+	 * listan är markerad som deleted så kommer den att 
+	 * länka om samtliga element. 
 	 */
 	@Override
-	public E remove(int index) {
+	public E remove(int index) 
+	{
 		checkIndex(index, size() - 1);
-		
 		Element<E> removed = getElement(index+1);
 		E data = removed.data;
 		
-		// Delete pa elementet pa index
+		getElement(index+1).data = null;
 		getElement(index+1).deleted = true;
 		sumDeleted++;
+		modCount++;
 		size--;
 
 		if(sumDeleted >= (size()+sumDeleted)/2)
 			deleteAllDeleted();
 
-		modCount++;
-
 		return data;
 	}
 
 	/*
-	 * denna ska vi kommentera 	
+	 * Metod för att länka om alla element som är deleted. 
+	 * Om next är flaggad som deleted så tar den nästa 
+	 * element efter next och ändrar dens pekare till det 
+	 * nuvarande elementet. När omlänkningen är klar så 
+	 * sätts sumDeleted till 0.
 	 */
 	private void deleteAllDeleted()
 	{
@@ -343,10 +403,13 @@ public class SimpleLinkedList<E> implements List<E> {
 	}
 
 	@Override
-	public boolean removeAll(Collection<?> c) {
+	public boolean removeAll(Collection<?> c) 
+	{
 		boolean changed = false;
-		for (Object o : c) {
-			while(remove(o)){
+		for (Object o : c) 
+		{
+			while(remove(o))
+			{
 				changed=true;
 			}
 		}
@@ -354,13 +417,18 @@ public class SimpleLinkedList<E> implements List<E> {
 	}
 
 	@Override
-	public boolean retainAll(Collection<?> c) {
+	public boolean retainAll(Collection<?> c) 
+	{
 		boolean changed = false;
 		int n = 0;
-		while (n < size()) {
-			if (c.contains(get(n))) {
+		while (n < size()) 
+		{
+			if (c.contains(get(n))) 
+			{
 				n++;
-			} else {
+			} 
+			else 
+			{
 				remove(n);
 				changed = true;
 			}
@@ -369,7 +437,8 @@ public class SimpleLinkedList<E> implements List<E> {
 	}
 
 	@Override
-	public E set(int index, E newElementValue) {
+	public E set(int index, E newElementValue) 
+	{
 		checkIndex(index, size() - 1);
 		Element<E> e = getElement(index + 1);
 		E oldValue = e.data;
@@ -378,16 +447,19 @@ public class SimpleLinkedList<E> implements List<E> {
 	}
 
 	@Override
-	public int size() {
+	public int size() 
+	{
 		return size;
 	}
 
-	public String toString() {
+	public String toString() 
+	{
 		StringBuilder buffer = new StringBuilder();
 
 		buffer.append("[");
 		Iterator<E> iter = iterator();
-		while (iter.hasNext()) {
+		while (iter.hasNext()) 
+		{
 			buffer.append(iter.next());
 			if (iter.hasNext())
 				buffer.append(", ");
@@ -401,17 +473,20 @@ public class SimpleLinkedList<E> implements List<E> {
 	// "optional", men de tillfor inget till uppgiften.
 
 	@Override
-	public List<E> subList(int fromIndex, int toIndex) {
+	public List<E> subList(int fromIndex, int toIndex) 
+	{
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Object[] toArray() {
+	public Object[] toArray() 
+	{
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public <T> T[] toArray(T[] arg0) {
+	public <T> T[] toArray(T[] arg0) 
+	{
 		throw new UnsupportedOperationException();
 	}
 
