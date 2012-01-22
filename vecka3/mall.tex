@@ -1,13 +1,13 @@
-% Alla i gruppen ska lÃ¤mna in individuellt i Moodle. 
-% Det ska dock vara samma fil fÃ¶r alla sÃ¥ att vi kan se vilka som har jobbat ihop.
+% Alla i gruppen ska lämna in individuellt i Moodle. 
+% Det ska dock vara samma fil för alla så att vi kan se vilka som har jobbat ihop.
 \documentclass[a4paper,10pt,oneside,onecolumn]{article}
 
 \usepackage[swedish]{babel}
 
-% FÃ¥r ni problem med att pdf-filen ser suddig ut pÃ¥ skÃ¤rmen sÃ¥ beror det pÃ¥ att ni inte har 
-% en fullstÃ¤ndig fontuppsÃ¤ttning och att bitmappade fonter i fel skala anvÃ¤nds. Den bÃ¤sta lÃ¶sningen 
-% Ã¤r att uppdatera fontuppsÃ¤ttningen, men man kan ocksÃ¥ plocka bort denna rad. Avstavning fungerar 
-% dock betydligt sÃ¤mre dÃ¥.
+% Får ni problem med att pdf-filen ser suddig ut på skärmen så beror det på att ni inte har 
+% en fullständig fontuppsättning och att bitmappade fonter i fel skala används. Den bästa lösningen 
+% är att uppdatera fontuppsättningen, men man kan också plocka bort denna rad. Avstavning fungerar 
+% dock betydligt sämre då.
 \usepackage[T1]{fontenc}
 
 \usepackage[latin1]{inputenc}
@@ -19,12 +19,12 @@
 \usepackage{textcomp}
 \lstset{language=Java, tabsize=3, numbers=left, frame=line}
 
-% GlÃ¶m inte att uppdatera rubriken
+% Glöm inte att uppdatera rubriken
 
-\title{ALDA VT12: LinjÃ¤ra datastrukturer samt introduktion till algoritmanalys}
+\title{ALDA VT12: Linjära datastrukturer samt introduktion till algoritmanalys}
 
-% Sortera gruppdeltagarna efter Efternamn. Om tvÃ¥ personer har samma efternamn sorteras dessa efter fÃ¶rnamnen.
-% Detta Ã¤r viktigt eftersom vissa uppgifter bestÃ¤ms av i vilken ordning namnen stÃ¥r. Tar man fel uppgift vid nÃ¥gon av dessa tillfÃ¤llen blir man automatiskt underkÃ¤nd.
+% Sortera gruppdeltagarna efter Efternamn. Om två personer har samma efternamn sorteras dessa efter förnamnen.
+% Detta är viktigt eftersom vissa uppgifter bestäms av i vilken ordning namnen står. Tar man fel uppgift vid någon av dessa tillfällen blir man automatiskt underkänd.
 \author{Leon Hennings\\leonh \and Kamyar Sajjadi\\kamy-saj}
 
 \begin{document}
@@ -34,13 +34,12 @@
 \section{Lazy Deletion}
 \lstinputlisting{SimpleLinkedList.java}
 
-\section{TvÃ¥ stackar i en array}
+\section{Två stackar i en array}
 \lstinputlisting{DoubleStack.java}
 
 \section{Algoritmanalys}
-
-Denna loop itererar n gÃ¥nger nÃ¤r n=10 sÃ¥ blir summan 10. Det innebÃ¤r att komplexiteten Ã¤r linjÃ¤r O(N).
-Vid 10 iterationer tar det ca 600 nanosekunder. NÃ¤r vi Ã¶kar n till 100 tar det ca 1300 nanosekunder. 
+Denna loop itererar n gånger när n=10 så blir summan 10. Det innebär att komplexiteten är linjär O(N).
+Vid 10 iterationer tar det ca 600 nanosekunder. När vi ökar n till 100 tar det ca 1300 nanosekunder. 
 \begin{lstlisting}
 //Exempel 1
 int sum = 0 ;
@@ -48,9 +47,10 @@ for(int i = 0; i<n ;i++)
 	sum++;
 \end{lstlisting}
 
-Exempel 2 kommer att Ã¶kas kvadratiskt O(N2). Eftersom det Ã¤r tvÃ¥ loopar som har O(N) dvs Ã¤r linjÃ¤ra sÃ¥ blir tidskomplexiteten N * N = N2.
-FÃ¶r varje varv i den Ã¶vre loopen kommer den undre loopen gÃ¥ n gÃ¥nger. Vid mÃ¤tning med nanosekunder ger n=10 ca 2900 nanosekunder samt n=100 tar det ca 160000 nanosekunder. 
+Exempel 2 kommer att ökas kvadratiskt O($N^{2}$). Eftersom det är två loopar som har O(N) dvs är linjära så blir tidskomplexiteten N * N = $N^{2}$.
+För varje varv i den övre loopen kommer den undre loopen gå n gånger. 
 
+Vid mätning med nanosekunder ger n=10 ca 2900 nanosekunder samt n=100 tar det ca 160000 nanosekunder. 
 \begin{lstlisting}
 //Exempel 2
 int sum = 0 ;
@@ -59,6 +59,12 @@ for (int i = 0 ; i<n ; i++)
 		sum++;
 \end{lstlisting}
 
+Första loopen är O(N) och för varje varv i den så går den inre loopen n * n varv vilket ger tidskomplexiteten $N^{2}$. 
+O(N) * O($N^{2}$) = O($N^{3}$).
+
+n = 10 tar 22000 nanosekunder
+
+n = 100 tar 15100000 nanosekunder
 \begin{lstlisting}
 //Exempel 3
 int sum = 0 ;
@@ -67,6 +73,13 @@ for (int i=0; i<n; i++)
 		sum++;
 \end{lstlisting}
 
+Den yttre loopen går n varv, O(N). För varje varv i den yttre loopen går inre loopen i varv, där i är så många varv den yttre loopen gått. 
+Då i närmar sig n kommer den inre loopen som mest gå n iterationer. Eftersom man i tidskomplexitets beräkning utgår från det värsta fallet så blir även den O(N).
+O(N) * O(N) = O($N^{2}$).
+
+n = 10 tar 2700 nanosekunder
+
+n = 100 tar 103000 nanosekunder
 \begin{lstlisting}
 //Exempel 4
 int sum = 0 ;
@@ -75,6 +88,12 @@ for (int i = 0; i<n; i++)
 		sum++;
 \end{lstlisting}
 
+Första loopen är O(N). Den andra loopen är O($N^{2}$) då den är beroende av den första loopens iterationer. Dvs den går exponentiellt så många varv som den första loopen har gått. 
+Den tredje loopen går lika många varv som den andra loopen och är O($N^{2}$). O(N) * O($N^{2}$) * O($N^{2}$) = O($N^{5}$)
+
+n = 10 tar 230000 nanosekunder
+
+n = 100 tar 700000000 nanosekunder
 \begin{lstlisting}
 //Exempel 5
 int sum = 0 ;
@@ -84,6 +103,22 @@ for (int i=0; i<n ; i++)
 			sum++;
 \end{lstlisting}
 
+Den första och andra loopen är lika som i exempel 5 dvs tillsammans O(N) * O($N^{2}$) = O($N^{3}$). Villkoret i den andra loopen uppfylls endast när j är jämt delbart med i.
+
+Eftersom den andra loopen kommer iterera tills j är likamed $i^{2}$ kommer den tredje loopen köras i-1 gånger per genom loopning av andra loopen.
+
+Då i närmar sig n kommer det resultera i att ifsatsens vilkor kommer uppfyllas n-1 gånger, worst case.
+
+Exempelvis, när i är 5 kommer den andra loopen gå 25 varv och i intervallet 0<=j<=24 kommer j vara jämnt delbart med i 4 gånger: j=5,10,15,20.
+
+Den sista loopen kommer då köras och den är som i exempel 5 O($N^{2}$). Detta innebär att eftersom den endast kör de gånger if satsen är sann så 
+kommer det resultera i en tidskomplexitet av O($N^{2}$)/O(N) = O(N). 
+
+Den totala tidskomplexiteten bli då O(N) * O($N^{2}$) * O(N) = O($N^{4}$)
+
+n = 10 tar 37000 nanosekunder
+
+n = 100 tar 28600000 nanosekunder
 \begin{lstlisting}
 //Exempel 6
 int sum = 0 ;
@@ -93,20 +128,19 @@ for (int i=1; i<n; i++)
 			for (int k=0; k<j; k++)
 				sum++;
 \end{lstlisting}
+
+\section{Poolfråga}
+Lifo är ett begrepp som nämns i samband med stackar. Vad innebär det? 
+Ge exempel på situationer då stackar är lämpliga och där de inte är lämpliga att använda istället för t ex array eller länkad lista.
+Visa hur man med hjälp av en stack kan göra Depth-first search i ett binärträd och varför lifo är fördelaktigt i den här situationen.
+
+För godkänt betyg måste du förklara lifo och kunna ge exempel på tillfällen då stackar är bra eller dåliga att använda. Dessutom bör grundläggande förståelse för hur en algoritm för depth-first serach uppvisas.
+För högre betyg ska lämpliga argument ges på fördelar med att använda lifo i depth-first search. Även en bra implementation ska beskrivas. 
 %\lstinputlisting{SimpleLinkedList.java}
 
 %\lstinputlisting[firstline=3, lastline=5]{SimpleLinkedList.java}
 
-% FÃ¶r att referena till en bild skriver man ''se figur \ref{fig:exempelbild}''.
-
-\begin{figure}[htbp]
-	\centering
-%		\includegraphics[width=1.00\textwidth]{bild}
-	\caption{exempelbild}
-	%\label{fig:exempelbild}
-\end{figure}
-
-% NedanstÃ¥ende Ã¤r bara fÃ¶r om ni vill anvÃ¤nda bibtex fÃ¶r att hantera referenser. 
+% Nedanstående är bara för om ni vill använda bibtex för att hantera referenser. 
 
 %\bibliographystyle{plain}
 %\bibliography{bibtex}
