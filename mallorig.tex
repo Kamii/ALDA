@@ -1,0 +1,110 @@
+% Alla i gruppen ska lämna in individuellt i Moodle. 
+%Det ska dock vara samma fil för alla så att vi kan se vilka som har jobbat ihop.
+\documentclass[a4paper,10pt,oneside,onecolumn]{article}
+
+\usepackage[swedish]{babel}
+
+% Får ni problem med att pdf-filen ser suddig ut på skärmen så beror det på att ni inte har 
+% en fullständig fontuppsättning och att bitmappade fonter i fel skala används. Den bästa lösningen 
+% är att uppdatera fontuppsättningen, men man kan också plocka bort denna rad. Avstavning fungerar 
+% dock betydligt sämre då.
+\usepackage[T1]{fontenc}
+
+% Här väljer ni naturligtvis den teckenkod ni använder er av
+\usepackage[latin1]{inputenc}
+
+\usepackage{a4wide}
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage{url}
+\usepackage{listings}
+\lstset{language=Java, tabsize=3, numbers=left, frame=line}
+
+
+
+% Glöm inte att uppdatera rubriken
+\title{ALDA VT12: rubriken på veckan kopierad från moodle}
+
+
+% Sortera gruppdeltagarna efter Efternamn. Om två personer har samma efternamn sorteras dessa efter förnamnen.
+% Detta är viktigt eftersom vissa uppgifter bestäms av i vilken ordning namnen står. Tar man fel uppgift vid någon av dessa tillfällen blir man automatiskt underkänd.
+\author{Förnamn Efternamn\\anv-namn \and Förnamn Efternamn\\anv-namn \and Förnamn Efternamn\\anv-namn}
+
+\begin{document}
+
+\maketitle
+
+\section{Detta är en rubrik}
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elementum pellentesque quam, eu dapibus leo bibendum eu. Quisque placerat justo libero, non dignissim eros. Nam ullamcorper tellus sit amet nisi lobortis varius. Proin vel tortor leo, at pulvinar elit. Proin massa tellus, aliquam at luctus vehicula, ornare at erat. In in felis nisi. Phasellus pretium quam et mauris facilisis blandit. Aenean et dapibus ligula. Vestibulum porta faucibus risus id rhoncus. Morbi placerat, elit vel tincidunt suscipit, nisi tortor cursus tellus, et varius elit orci sed nibh. Cras accumsan magna a nisl molestie vitae laoreet arcu vestibulum. Praesent elementum tincidunt neque. Nunc id risus et libero suscipit suscipit a in lacus.
+
+% Nytt stycke får man genom att lägga in en eller flera tomma rader mellan styckena. Använd *INTE* \\ eller \newline för detta.
+
+Vestibulum eu enim et lorem vestibulum blandit. Sed tellus magna, ornare vel iaculis sed, porta quis lectus. Cras nec egestas orci. In hac habitasse platea dictumst. Integer hendrerit commodo sagittis. Vestibulum interdum porttitor sem, in bibendum enim ornare vitae. Donec lacinia, justo tincidunt pellentesque sollicitudin, lectus sem vestibulum massa, a malesuada lacus diam non lorem.
+
+\section{Detta är också en rubrik}
+
+
+Vivamus lacinia nisl ut ipsum euismod in imperdiet urna pretium. Fusce tincidunt, lacus sit amet sollicitudin vehicula, elit ligula pellentesque massa, in sollicitudin purus libero vel mauris. Phasellus convallis odio mi. Ut feugiat dui id nunc mattis dapibus. Praesent tellus nunc, rhoncus eu lacinia et, elementum id magna. Etiam consequat nulla sit amet odio venenatis laoreet at in tellus. In facilisis sodales magna, at ultrices erat ultricies sed.
+
+Cras ut quam arcu. Curabitur arcu ante, congue eget vestibulum sit amet, facilisis in orci. Sed ut magna neque, sed accumsan nibh. In eu mi justo, non fermentum enim. In eros risus, molestie id dapibus eu, commodo sed ante. Nam porttitor gravida purus vitae luctus. Proin ut felis sed augue cursus facilisis non id mi.
+
+\section{Lite exempelkod}
+
+Kom ihåg att plocka bort detta stycke\dots
+
+En url skrivs \url{http://dsv.su.se}
+
+Olika versioner på programkod
+
+\begin{lstlisting}
+public static void main(String[] args){
+	// Koden 
+}
+\end{lstlisting}
+
+\lstinputlisting{Exempel.java}
+
+\lstinputlisting[firstline=3, lastline=5]{Exempel.java}
+
+\begin{itemize}
+	\item Första punkten
+	\item Andra punkten
+	\item Tredje punkten
+\end{itemize}
+
+\begin{enumerate}
+	\item Första punkten
+	\item Andra punkten
+	\item Tredje punkten
+\end{enumerate}
+
+För att referena till en bild skriver man ''se figur \ref{fig:exempelbild}''.
+
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=1.00\textwidth]{bild}
+	\caption{exempelbild}
+	\label{fig:exempelbild}
+\end{figure}
+
+\begin{table}[htbp]
+	\centering
+		\begin{tabular}{lll}
+			Kol 1 & Kol 2 & Kol 3 \\
+			\hline
+			1 & 2 & 3 \\
+			4 & 5 & 6 \\
+		\end{tabular}
+	\caption{Exempeltabell}
+	\label{tab:exempeltabell}
+\end{table}
+
+% Nedanstående är bara för om ni vill använda bibtex för att hantera referenser. 
+
+%\bibliographystyle{plain}
+%\bibliography{bibtex}
+%\bibdata{bibtex}
+
+
+\end{document}
