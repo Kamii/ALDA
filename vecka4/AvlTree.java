@@ -202,6 +202,24 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>>
 	}
 
 	/**
+	 * Internal method to controll the height info
+	 */
+	private boolean hasCorrectHeightInfo(AvlNode<AnyType> node)
+	{
+		if(node == null)
+			return true;
+
+		int diff = Math.max(height(node.left), height(node.right)) - Math.min(height(node.left), height(node.right));
+
+		if(diff>1)
+			return false;
+		else if(node.height - Math.max(height(node.left), height(node.right)) != 1)
+			return false;
+		else 
+			return hasCorrectHeightInfo(node.right) && hasCorrectHeightInfo(node.left);
+	}
+
+	/**
 	 * Internal method to insert into a subtree.
 	 * @param x the item to insert.
 	 * @param t the node that roots the subtree.
