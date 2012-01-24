@@ -19,6 +19,7 @@
  * Note that all "matching" is based on the compareTo method.
  * @author Mark Allen Weiss
  */
+import java.lang.RuntimeException;
 public class AvlTree<AnyType extends Comparable<? super AnyType>>
 {
     /**
@@ -37,12 +38,56 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>>
     {
         root = insert( x, root );
     }
+    /**
+    * Size() calls size of tree.
+    * calls size(x) with @param root.
+    */
+    public int size(){
+        return size(root);
+    }
+
+    private int size(AvlNode<AnyType> x ){
+        if(x==null)
+            return 0;
+        else
+           return size(x.left) + size(x.right) + 1;
+    }
+    public int maxHeight(){
+        return maxHeight(root);
+    }
+    private int maxHeight(AvlNode<AnyType> x){
+        if (x==null)
+            return -1;
+        return Math.max(height(x.left)+1, height(x.right)+1);
+    }
+    public boolean hasCorrectHeightInfo(){
+        return hasCorrectHeightInfo(root);
+    }
+    private boolean hasCorrectHeightInfo(AvlNode<AnyType> t){
+        if(t==null){
+            System.out.println("löv");
+            return true;
+        }
+        else{
+            int lval = height(t.left);
+            int rval = height(t.right);
+            int diff = Math.max(rval,lval)-Math.min(rval,lval);
+            if(diff>1)
+                return false;
+            else if(t.height-Math.max(rval,lval)!=1)
+                return false;
+            else{
+                System.out.println("okej");
+                return hasCorrectHeightInfo(t.right) && hasCorrectHeightInfo(t.left);
+            }
+        }
+    }
 
     /**
      * Remove from the tree. Nothing is done if x is not found.
      * @param x the item to remove.
      */
-    public void remove( AnyType x )
+    public void remove(AnyType x )
     {
         System.out.println( "Sorry, remove unimplemented" );
     }
@@ -272,7 +317,11 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>>
         k1.right = rotateWithLeftChild( k1.right );
         return rotateWithRightChild( k1 );
     }
-
+    public static class UnderflowException extends RuntimeException{
+        public UnderflowException(){
+            super();
+        } 
+    }
     private static class AvlNode<AnyType>
     {
             // Constructors
@@ -308,16 +357,20 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>>
 
         System.out.println( "Checking... (no more output means success)" );
 
-        for( int i = GAP; i != 0; i = ( i + GAP ) % NUMS )
-            t.insert( i );
-
-        if( NUMS < 40 )
-            t.printTree( );
-        if( t.findMin( ) != 1 || t.findMax( ) != NUMS - 1 )
-            System.out.println( "FindMin or FindMax error!" );
-
-        for( int i = 1; i < NUMS; i++ )
-            if( !t.contains( i ) )
-               System.out.println( "Find error1!" );
+//        for( int i = GAP; i != 0; i = ( i + GAP ) % NUMS ){
+//            t.insert( i );
+//            }
+        for(int i = 1; i<5 ; i++)
+            t.insert(i);
+        System.out.println("correctomundo: " + t.hasCorrectHeightInfo());
+//        if( NUMS < 40 )
+//            t.printTree( );
+//        if( t.findMin( ) != 1 || t.findMax( ) != NUMS - 1 )
+//            System.out.println( "FindMin or FindMax error!" );
+//
+//        for( int i = 1; i < NUMS; i++ )
+//            if( !t.contains( i ) )
+//               System.out.println( "Find error1!" );
+        System.out.println(t.size());
     }
 }
