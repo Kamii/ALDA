@@ -197,7 +197,6 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>>
 			else
 				r = false;
 		}
-
 		return l && r;
 	}
 
@@ -209,9 +208,9 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>>
 		if(node == null)
 			return true;
 
-		int diff = Math.max(height(node.left), height(node.right)) - Math.min(height(node.left), height(node.right));
+		int diff = height(node.left) - height(node.right);
 
-		if(diff>1)
+		if(Math.abs(diff)>1)
 			return false;
 		else if(node.height - Math.max(height(node.left), height(node.right)) != 1)
 			return false;
