@@ -30,21 +30,16 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>>
 	}
 
 	/**
-	 * Insert into the tree; duplicates are ignored.
-	 * @param x the item to insert.
-	 */
-	public void insert( AnyType x )
-	{
-		root = insert( x, root );
-	}
-
-	/**
 	 * Remove from the tree. Nothing is done if x is not found.
 	 * @param x the item to remove.
 	 */
 	public void remove( AnyType x )
 	{
-		System.out.println( "Sorry, remove unimplemented" );
+       insert(x, root);
+	}
+	public boolean remove( AnyType x, AvlNode<AnyType> t )
+	{
+                
 	}
 
 	/**
@@ -114,31 +109,6 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>>
 	{
 		return size(root);
 	}
-
-	/**
-	 * Return the max height of the tree.
-	 */
-	public int maxHeight()
-	{
-		return maxHeight(root);
-	}
-
-	/**
-	 * See if the tree is a binary tree.
-	 */
-	public boolean isSearchTree()
-	{
-		return isSearchTree(root);
-	}
-
-	/**
-	 * Controll if the height of the tree is correct.
-	 */
-	public boolean hasCorrectHeightInfo()
-	{
-		return hasCorrectHeightInfo(root);
-	}
-
 	/**
 	 * Internal method to get the size.
 	 * @param node the node that roots the subtree.
@@ -157,6 +127,14 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>>
 	 * @param node the node that roots the subtree.
 	 * @return the max height of the tree. 
 	 */
+
+	/**
+	 * Return the max height of the tree.
+	 */
+	public int maxHeight()
+	{
+		return maxHeight(root);
+	}
 	private int maxHeight(AvlNode<AnyType> node)
 	{
 		int height = 0;
@@ -167,6 +145,13 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>>
 			return Math.max(maxHeight(node.left)+1, maxHeight(node.right)+1);
 	}
 
+	/**
+	 * See if the tree is a binary tree.
+	 */
+	public boolean isSearchTree()
+	{
+		return isSearchTree(root);
+	}
 	/**
 	 * Internal method to control if the tree is a binary tree. 
 	 * @param node the node that roots the subtree.
@@ -201,6 +186,13 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>>
 	}
 
 	/**
+	 * Controll if the height of the tree is correct.
+	 */
+	public boolean hasCorrectHeightInfo()
+	{
+		return hasCorrectHeightInfo(root);
+	}
+	/**
 	 * Internal method to controll the height info
 	 */
 	private boolean hasCorrectHeightInfo(AvlNode<AnyType> node)
@@ -218,6 +210,14 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>>
 			return hasCorrectHeightInfo(node.right) && hasCorrectHeightInfo(node.left);
 	}
 
+	/**
+	 * Insert into the tree; duplicates are ignored.
+	 * @param x the item to insert.
+	 */
+	public void insert( AnyType x )
+	{
+		root = insert( x, root );
+	}
 	/**
 	 * Internal method to insert into a subtree.
 	 * @param x the item to insert.
