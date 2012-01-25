@@ -1,13 +1,13 @@
-% Alla i gruppen ska l�mna in individuellt i Moodle. 
-% Det ska dock vara samma fil f�r alla s� att vi kan se vilka som har jobbat ihop.
+% Alla i gruppen ska lämna in individuellt i Moodle. 
+% Det ska dock vara samma fil för alla så att vi kan se vilka som har jobbat ihop.
 \documentclass[a4paper,10pt,oneside,onecolumn]{article}
 
 \usepackage[swedish]{babel}
 
-% F�r ni problem med att pdf-filen ser suddig ut p� sk�rmen s� beror det p� att ni inte har 
-% en fullst�ndig fontupps�ttning och att bitmappade fonter i fel skala anv�nds. Den b�sta l�sningen 
-% �r att uppdatera fontupps�ttningen, men man kan ocks� plocka bort denna rad. Avstavning fungerar 
-% dock betydligt s�mre d�.
+% Får ni problem med att pdf-filen ser suddig ut på skärmen så beror det på att ni inte har 
+% en fullständig fontuppsättning och att bitmappade fonter i fel skala används. Den bästa lösningen 
+% är att uppdatera fontuppsättningen, men man kan också plocka bort denna rad. Avstavning fungerar 
+% dock betydligt sämre då.
 \usepackage[T1]{fontenc}
 
 \usepackage[latin1]{inputenc}
@@ -19,12 +19,12 @@
 \usepackage{textcomp}
 \lstset{language=Java, tabsize=3, numbers=left, frame=line}
 
-% Gl�m inte att uppdatera rubriken
+% Glöm inte att uppdatera rubriken
 
-\title{ALDA VT12: Linj�ra datastrukturer samt introduktion till algoritmanalys}
+\title{ALDA VT12:Träd samt mera algoritmanalys}
 
-% Sortera gruppdeltagarna efter Efternamn. Om tv� personer har samma efternamn sorteras dessa efter f�rnamnen.
-% Detta �r viktigt eftersom vissa uppgifter best�ms av i vilken ordning namnen st�r. Tar man fel uppgift vid n�gon av dessa tillf�llen blir man automatiskt underk�nd.
+% Sortera gruppdeltagarna efter Efternamn. Om två personer har samma efternamn sorteras dessa efter förnamnen.
+% Detta är viktigt eftersom vissa uppgifter bestäms av i vilken ordning namnen står. Tar man fel uppgift vid någon av dessa tillfällen blir man automatiskt underkänd.
 \author{Leon Hennings\\leonh \and Kamyar Sajjadi\\kamy-saj}
 
 \begin{document}
@@ -32,18 +32,61 @@
 \maketitle
 
 \section{}
-\lstinputlisting{}
+\lstinputlisting{AvlTree.java}
 
-\section{}
-\lstinputlisting{}
 
 \section{Algoritmanalys}
+Noteringar :
+String.format vad är det för ordo på den ?
+equals vad är det för ordo på den då ?
 
-\section{Poolfr�ga}
+Algoritm analys
+1. boolean add(E element)
+Metoden kallar konstruktorn för Element, vilken skapar nytt element och stoppar in den i listan genom att länka dess next till tail och dess previous till elemented innan tail.
+Eftersom alla operationer i add och operationerna som körs i konstruktorn är konstanta blir även add metoden konstant.
+
+2. public void add(int index, E element)
+Kallar först checkIndex som består av ett villkor som ifall det uppfylls kastar exception, denna metod är konstant. O(1)
+Sedan kallas getElement som skapar ett temp element av head för att sedan loopa igenom listan fram till index. getElement är linjär, O(N).
+Därefter kallas Element konstruktorn som är konstant och sedan ökas två variabler med ett, vilket också görs på konstant tid.
+Då alla satser görs sekventiellt är det den störsat som avgör ordo, vilken blir O(N).
+
+3. addAll(Collection<? extends E>)
+Börjar med en loop som går igenom hela den givna samlingen och kallar add(Element E) för varje element i den. add() är konstant och loopen är O(N).
+Därefter kallas size på den givna collectionen. Eftersom vi inte kan veta vilken sorts collection det är får vi anta att den kan få loopa igenom hela listan för att få reda på antalet element i den.
+size är därför också O(N). Totala tidskomplexiteten blir därför O(2N), O(N) eftersom vi inte räknar konstanter.
+
+4. addAll(int index, Collection<? extends E>)
+Som metoden ovan har den en loop som itererar N varv. I loopen kallas add(int index, Element E) som är O(N) vilket gör tidskomplexiteten för loopen till O($N^{2}$).
+
+5. public int indexOf(Object o)
+Denna metod har en loop som går igenom samtliga element i den länkade listan. Själva loophuvudet har en tidskomplexitet på O(N). I loopen är det en if else sats med villkor som kollar om det givna objektet är null, om det inte är det så jämförs objectet med ett element i listan med hjälp av equals metoden. Då det givna objectet mycket väl skulle kunna vara en array som måste jämföra varje index med elementet, måste vi anta att .equals är O(N).
+Detta ger tidskomplexiteten O($N^{2}$).
+Då vi inte vet vad det är för slags objekt som finns i listan skulle det kunna vara högre tidskomplexitet för equals, men vi antar hypotesen om den gode programmeraren att det inte är en rysk babuschka docka av datasamlingar i datasamlingar i vår lista.
+
+6. lastIndexOf(Object o)
+Först skapas en listIterator, i dess konstruktor kallas checkIndex som är konstant och sedan returneras en ny iterator med ett anrop till getElement som har tidskomplexiteten O(N).
+Sedan körs en while loop med hasPrevious som villkor. hasPrevious är konstant och while loopen kommer som värst gå igenom hela listan vilket ger loophuvudet O(N).
+I while loopen kallas först previous som returnerar element före i listan på konstant tid.
+Efter det är det en if sats som kollar om objektet är null, annars kollar den ifall objektet är lika med elementet som pekats ut av iteratorn, med hjälp av equals. Som tidigare antar vi att equals är O(N).
+Ifall vilkoret uppfylls körs nextIndex som tar konstant tid.
+While loopens N gånger equals N ger O($N^{2}$)
+
+7.  boolean retainAll(Collection<?> c)
+Först görs två programsatser på konstant tid.
+Därefter kommer en while loop som kör N gånger.
+I while loopen ligger ett villkor som kollas varje gång. Villkoret anropar get() och jämför dess returvärde med containsmetoden.
+get() anropar checkIndex som tar konstant tid och getElement som tar O(N).
+contains har en loop som kör N gånger och i den loopen en ett villkor som anropar equals vilket gör att loopen tar O($N^{2}$) i värsta fall.
+Då anropet av get görs före contains kommer deras ordo värden inte multipliceras utan endast contains O($N^{2}$) räknas.
+Ifall villkoret inte uppfylls kallas remove(index) metoden som i sin tur kallar getElement, vilket gör att den till O(N).
+Denna ligger i sekvens med contains och därför blir loopens innehåll O($N^{2}$) + O(2N) vilket förenklas till O($N^{2}$).
+Detta multiplicerat med while loopens iterationer ger O($N^{3}$).
+\section{Poolfråga}
 
 %\lstinputlisting[firstline=3, lastline=5]{SimpleLinkedList.java}
 
-% Nedanst�ende �r bara f�r om ni vill anv�nda bibtex f�r att hantera referenser. 
+% Nedanstående är bara för om ni vill använda bibtex för att hantera referenser. 
 
 %\bibliographystyle{plain}
 %\bibliography{bibtex}
