@@ -36,10 +36,6 @@
 
 
 \section{Algoritmanalys}
-Noteringar :
-String.format vad är det för ordo på den ?
-equals vad är det för ordo på den då ?
-
 Algoritm analys
 1. boolean add(E element)
 Metoden kallar konstruktorn för Element, vilken skapar nytt element och stoppar in den i listan genom att länka dess next till tail och dess previous till elemented innan tail.
@@ -54,23 +50,25 @@ Då alla satser görs sekventiellt är det den störsat som avgör ordo, vilken 
 3. addAll(Collection<? extends E>)
 Börjar med en loop som går igenom hela den givna samlingen och kallar add(Element E) för varje element i den. add() är konstant och loopen är O(N).
 Därefter kallas size på den givna collectionen. Eftersom vi inte kan veta vilken sorts collection det är får vi anta att den kan få loopa igenom hela listan för att få reda på antalet element i den.
-size är därför också O(N). Totala tidskomplexiteten blir därför O(2N), O(N) eftersom vi inte räknar konstanter.
+size är därför i värsta fall O(M). Totala tidskomplexiteten blir därför O(N+M). Detta blir det högsta av O(M) och O(N) eftersom vi inte räknar konstanter.
+
+ också O(N). Totala tidskomplexiteten blir därför O(2N), O(N) eftersom vi inte räknar konstanter.
 
 4. addAll(int index, Collection<? extends E>)
 Som metoden ovan har den en loop som itererar N varv. I loopen kallas add(int index, Element E) som är O(N) vilket gör tidskomplexiteten för loopen till O($N^{2}$).
 
 5. public int indexOf(Object o)
-Denna metod har en loop som går igenom samtliga element i den länkade listan. Själva loophuvudet har en tidskomplexitet på O(N). I loopen är det en if else sats med villkor som kollar om det givna objektet är null, om det inte är det så jämförs objectet med ett element i listan med hjälp av equals metoden. Då det givna objectet mycket väl skulle kunna vara en array som måste jämföra varje index med elementet, måste vi anta att .equals är O(N).
-Detta ger tidskomplexiteten O($N^{2}$).
+Denna metod har en loop som går igenom samtliga element i den länkade listan. Själva loophuvudet har en tidskomplexitet på O(N). I loopen är det en if else sats med villkor som kollar om det givna objektet är null, om det inte är det så jämförs objectet med ett element i listan med hjälp av equals metoden. Då det givna objectet mycket väl skulle kunna vara en array som måste jämföra varje index med elementet, måste vi anta att .equals är O(M).
+Detta ger tidskomplexiteten O(NM).
 Då vi inte vet vad det är för slags objekt som finns i listan skulle det kunna vara högre tidskomplexitet för equals, men vi antar hypotesen om den gode programmeraren att det inte är en rysk babuschka docka av datasamlingar i datasamlingar i vår lista.
 
 6. lastIndexOf(Object o)
 Först skapas en listIterator, i dess konstruktor kallas checkIndex som är konstant och sedan returneras en ny iterator med ett anrop till getElement som har tidskomplexiteten O(N).
 Sedan körs en while loop med hasPrevious som villkor. hasPrevious är konstant och while loopen kommer som värst gå igenom hela listan vilket ger loophuvudet O(N).
 I while loopen kallas först previous som returnerar element före i listan på konstant tid.
-Efter det är det en if sats som kollar om objektet är null, annars kollar den ifall objektet är lika med elementet som pekats ut av iteratorn, med hjälp av equals. Som tidigare antar vi att equals är O(N).
+Efter det är det en if sats som kollar om objektet är null, annars kollar den ifall objektet är lika med elementet som pekats ut av iteratorn, med hjälp av equals. Som tidigare antar vi att equals är O(M).
 Ifall vilkoret uppfylls körs nextIndex som tar konstant tid.
-While loopens N gånger equals N ger O($N^{2}$)
+While loopens N gånger equals N ger O(NM)
 
 7.  boolean retainAll(Collection<?> c)
 Först görs två programsatser på konstant tid.
