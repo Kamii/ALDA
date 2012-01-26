@@ -51,15 +51,15 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>>
 //			System.out.println("före remove " + node.element + " " + node.height);
 			node.left = remove(x, node.left);
 
+//			System.out.println("vänstertung men gör höger rot");
 			if(height(node.right) - height(node.left) == 2)
-				if(findMax(node.right).element.compareTo(node.right.element) > 0)
+				if(height(node.right.right) >= height(node.right.left)) // ändringar här för att koden skulle funka
 					node = rotateWithRightChild(node);
 				else
 					node = doubleWithRightChild(node);
 				
 			node.height = maxHeight(node); 
-//			System.out.println("obalans eller inte i node " + node.element);
-//			System.out.println(node.element + " " + node.height);
+//			System.out.println("efter remove " + node.element + " " + node.height);
 		}
 		else if(x.compareTo(node.element) > 0) //Noden är större. gå ner i det högra barnet.
 		{
@@ -67,16 +67,15 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>>
 //			System.out.println("före remove " + node.element + " " + node.height);
 			node.right = remove(x, node.right);
 
+//			System.out.println("högertung men gör länster rot");
 			if(height(node.left) - height(node.right) == 2)
-				if(findMax(node.left).element.compareTo(node.left.element) < 0)
+				if(height(node.left.left) >= height(node.left.right)) // ändringar här för att koden skulle funka
 					node = rotateWithLeftChild(node);
 				else
 					node = doubleWithLeftChild(node);
 			
 			node.height = maxHeight(node); 
-//			System.out.println("obalans eller inte i node " + node.element);
-
-//			System.out.println(node.element + " " + node.height);
+//			System.out.println("efter remove " + node.element + " " + node.height);
 		}
 		else //Vi har hittat rätt nod. GRATTIS
 			if(node.right == null) // Om den inte har någon höger ta den vänstra. 
@@ -499,11 +498,6 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>>
 		final int NUMS = 40;
 		final int GAP  =   37;
 
-		t.insert(1);
-		t.insert(2);
-		t.insert(4);
-		t.insert(3);
-		t.remove(1);
 
 		System.out.println("--Start of tree--");
 		t.printTree( );
