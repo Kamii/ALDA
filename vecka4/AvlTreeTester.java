@@ -1,6 +1,7 @@
 import static org.junit.Assert.*;
 
 import org.junit.*;
+import java.util.Random;
 
 /**
  * Början på en testsvit för borttag ur ett AVL-träd. Testar inte alla
@@ -30,7 +31,6 @@ public class AvlTreeTester {
 		tree.insert(2);
 		tree.remove(2);
 		checkTree(1, 3, 13, 17);
-		tree.makeEmpty();
 	}
 
 	@Test 
@@ -43,7 +43,6 @@ public class AvlTreeTester {
 		tree.insert(30);
 		tree.remove(89);
 		checkTree(1, 3, 30, 56);
-		tree.makeEmpty();
 	}
 
 	@Test
@@ -60,7 +59,6 @@ public class AvlTreeTester {
 		tree.insert(56);
 		tree.remove(6);
 		checkTree(2, 7, 10, 67);
-		tree.makeEmpty();
 	}
 
 	@Test
@@ -77,7 +75,6 @@ public class AvlTreeTester {
 		tree.insert(25);
 		tree.remove(75);
 		checkTree(2, 7, 9, 73);
-		tree.makeEmpty();
 	}
 
 	@Test
@@ -168,7 +165,21 @@ public class AvlTreeTester {
 	}
 
 	@Test
-	public void random() {
-	}
+	public void random() 
+	{
+		Random rn = new Random();
 
+		for(int n = 0; n < 10000; n++)
+			tree.insert(rn.nextInt());
+
+		for(int n = 2000; n < 5000; n++)
+		{
+			tree.remove(rn.nextInt());
+			assertTrue(tree.hasCorrectHeightInfo());
+		}
+	}
 }
+
+
+
+
