@@ -41,60 +41,66 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>>
 			root = remove(x, root);
 	}
 
+	/**
+	 * Internal method for remove.
+	 * @param x the item(element) to remove.
+	 * @param node the root node. 
+	 * @return the root node after all changes. 
+	 */
 	public AvlNode<AnyType> remove( AnyType x, AvlNode<AnyType> node )
 	{
 	  if(node == null)
 			return null;
-		else if(x.compareTo(node.element) < 0) //Noden är mindre. gå ner i vänstra barnet.
+		else if(x.compareTo(node.element) < 0) //Noden är mindre då går vi ner i vänstra barnet.
 		{
-//			System.out.println("gå in i den vänstra för "+x + " noden du är på atm är " + node.element);
-//			System.out.println("före remove " + node.element + " " + node.height);
-			node.left = remove(x, node.left);
+			//Anropa remove med vänsterbarnet och sätt nodens vänsterbarn till det som remove kommer returnera. 
+			node.left = remove(x, node.left); 
 
-//			System.out.println("vänstertung men gör höger rot");
+			//Om trädet är obalanserat så kollar vi vilken sida som är den tunga sidan och gör rotationerna.
+			//Antingen är den "höger höger tung" eller så är den "höger vänster tung". 
 			if(height(node.right) - height(node.left) == 2)
-				if(height(node.right.right) >= height(node.right.left)) // ändringar här för att koden skulle funka
+				if(height(node.right.right) >= height(node.right.left))
 					node = rotateWithRightChild(node);
 				else
 					node = doubleWithRightChild(node);
 				
+			//Uppdatera vikten i noden. 
 			node.height = maxHeight(node); 
-//			System.out.println("efter remove " + node.element + " " + node.height);
 		}
-		else if(x.compareTo(node.element) > 0) //Noden är större. gå ner i det högra barnet.
+		else if(x.compareTo(node.element) > 0) //Noden är större då går vi ner i högra barnet.
 		{
-//			System.out.println("gå in i den högra för " + x + " noden du är på atm är " + node.element);
-//			System.out.println("före remove " + node.element + " " + node.height);
+			//Anropa remove med högerbarnet och sätt det som returneras till noden högerbarn.
 			node.right = remove(x, node.right);
 
-//			System.out.println("högertung men gör länster rot");
+			//Om trädet är obalanserat så kollar vi vilken sida som är den tunga sidan och gör rotationerna. 
+			//Antingen är den "vänster vänster tung" eller så är den "vänster höger tung"
 			if(height(node.left) - height(node.right) == 2)
-				if(height(node.left.left) >= height(node.left.right)) // ändringar här för att koden skulle funka
+				if(height(node.left.left) >= height(node.left.right)) 
 					node = rotateWithLeftChild(node);
 				else
 					node = doubleWithLeftChild(node);
 			
+			//uppdatera vikten i noden. 
 			node.height = maxHeight(node); 
-//			System.out.println("efter remove " + node.element + " " + node.height);
 		}
-		else //Vi har hittat rätt nod. GRATTIS
-			if(node.right == null) // Om den inte har någon höger ta den vänstra. 
+		else //Rätt nod är hittad. GRATTIS
+			if(node.right == null) // Om den inte har något högerbarn ta det vänstra barnet. 
 			{
 				AvlNode<AnyType> tmpReturn = node.left;
 				node = null; // Ta bort den noden vi inte ska ha kvar. 
 				return tmpReturn; //returnerar det subträdet som ska kopplas. 
 			}
-			else if(node.left == null) // Om den inte har någon länster ta den högra. 
+			else if(node.left == null) // Om den inte har något vänsterbarn ta det högra barnet. 
 			{
 				AvlNode<AnyType> tmpReturn = node.right;
 				node = null;
 				return tmpReturn;
 			}
-			else
+			else // Noden har två barn. 
 			{
-				AvlNode<AnyType> tmpReturn = findMax(node.left); // Hämta den hösta noden i vänstra barnet. 
+				AvlNode<AnyType> tmpReturn = findMax(node.left); // Hämta den högsta noden i vänstra barnet. 
 				remove(tmpReturn.element, node); //remove på findMax noden.
-				node.element = tmpReturn.element;  //sätter noden element till finMax i vänstra barnet. 
+				node.element = tmpReturn.element;  //sätter nodens element till vänstra barnets högsta element. 
 			}
 		return node;
 	}
@@ -166,6 +172,7 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>>
 	{
 		return size(root);
 	}
+
 	/**
 	 * Internal method to get the size.
 	 * @param node the node that roots the subtree.
@@ -180,12 +187,6 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>>
 	}
 
 	/**
-	 * Internal method to get the max height of the tree.
-	 * @param node the node that roots the subtree.
-	 * @return the max height of the tree. 
-	 */
-
-	/**
 	 * Return the max height of the tree.
 	 */
 	public int maxHeight()
@@ -193,6 +194,11 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>>
 		return maxHeight(root);
 	}
 
+	/**
+	 * Internal method to get the max height of the tree.
+	 * @param node the node that roots the subtree.
+	 * @return the max height of the tree. 
+	 */
 	private int maxHeight(AvlNode<AnyType> node)
 	{
 		int height = 0;
@@ -200,6 +206,7 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>>
 		if(node == null)
 			return -1;
 		else
+			//returnera det högsta av det vänstra och det högra subträdet. 
 			return Math.max(maxHeight(node.left)+1, maxHeight(node.right)+1);
 	}
 
@@ -212,14 +219,27 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>>
 	}
 
 	/**
-	 * Internal method to control if the tree is a binary tree. 
+	 * Internal method to control if the tree is a binary tree.
 	 * @param node the node that roots the subtree.
-	 * @return true if the tree is binary else false. 
+	 * @return true if the tree is binary else false.
+	 *
+	 * Undersöker om trädet är ett sökträd genom att se att
+	 * högerbarn har högre värde och vänsterbarn har lägre värde
+	 * Ifall trädet är tomt returneras true.
+	 * Ifall det inte finns ett vänsterbarn sätts boolean l till true.
+	 * Annars jämförs elementets värde med vänsterbarnets värde.
+	 * Om vänsterbarnet är lägre kallas isSearchTree rekursivt
+	 * på vänsterbarnet och sätter det till dess returvärde.
+	 * Annars blir l false.
+	 * Sedan görs motsvarande för högerbarnet.
+	 * Ifall både boolean l och boolean r satts till true
+	 * returneras true.
 	 */
 	private boolean isSearchTree(AvlNode<AnyType> node)
 	{
 		boolean l, r;
 
+		// Basecase
 		if(isEmpty())
 			return true;
 
@@ -257,6 +277,15 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>>
 
 	/**
 	 * Internal method to controll the height info
+	 * @param node the node that we want to check
+	 * @return true or false 
+	 *
+	 * Är absolut värdet av differansen för de två barnen 
+	 * är större än 1 så är det något av subträden som 
+	 * inte har korrekt höjd värde
+	 * Annars, Om det barnnoden med högst vikt inte är 
+	 * ett mindre än nodens höjd så har den fel höjd info
+	 * Annars, returnera sant ifall de båda subträden har korrekt höjd
 	 */
 	private boolean hasCorrectHeightInfo(AvlNode<AnyType> node)
 	{
@@ -495,29 +524,31 @@ public class AvlTree<AnyType extends Comparable<? super AnyType>>
 	public static void main( String [ ] args )
 	{
 		AvlTree<Integer> t = new AvlTree<Integer>( );
-		final int NUMS = 40;
+		final int NUMS = 4000;
 		final int GAP  =   37;
 
+		System.out.println("Checking...(...)");
 
-		System.out.println("--Start of tree--");
-		t.printTree( );
-		System.out.println("--End of tree--");
-		System.out.println("\n");
-		System.out.println("Max height : " + t.maxHeight());
-		System.out.println("Size of the tree (node count): " + t.size());
-		System.out.println("Is this tree a searchTree: " + t.isSearchTree());
-		System.out.println("Is the Height correct : " + t.hasCorrectHeightInfo());
+		for( int i = GAP; i != 0; i = ( i + GAP ) % NUMS )
+			t.insert( i );
 
-//		for( int i = GAP; i != 0; i = ( i + GAP ) % NUMS )
-//			t.insert( i );
-//
-//		if( NUMS < 40 )
-//			t.printTree( );
-//		if( t.findMin( ) != 1 || t.findMax( ) != NUMS - 1 )
-//			System.out.println( "FindMin or FindMax error!" );
-//
-//		for( int i = 1; i < NUMS; i++ )
-//			if( !t.contains( i ) )
-//				System.out.println( "Find error1!" );
+		if( NUMS < 40 )
+			t.printTree( );
+		if( t.findMin( ) != 1 || t.findMax( ) != NUMS - 1 )
+			System.out.println( "FindMin or FindMax error!" );
+
+		for( int i = 1; i < NUMS; i++ )
+			if( !t.contains( i ) )
+				System.out.println( "Find error1!" );
+
+//		Vår egna lilla test del i main. 
+//		System.out.println("--Start of tree--");
+//		t.printTree( );
+//		System.out.println("--End of tree--");
+//		System.out.println("\n");
+//		System.out.println("Max height : " + t.maxHeight());
+//		System.out.println("Size of the tree (node count): " + t.size());
+//		System.out.println("Is this tree a searchTree: " + t.isSearchTree());
+//		System.out.println("Is the Height correct : " + t.hasCorrectHeightInfo());
 	}
 }
