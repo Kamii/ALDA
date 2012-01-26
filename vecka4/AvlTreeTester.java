@@ -14,6 +14,7 @@ public class AvlTreeTester {
 
 	private void checkTree(int expectedHeight, int expectedSize,
 			int expectedMin, int expectedMax) {
+		assertEquals(expectedHeight, tree.maxHeight());
 		assertEquals(expectedSize, tree.size());
 		assertEquals(new Integer(expectedMin), tree.findMin());
 		assertEquals(new Integer(expectedMax), tree.findMax());
@@ -138,7 +139,12 @@ public class AvlTreeTester {
 		tree.insert(3);
 		checkTree(1, 3, 1, 3);
 
-		for (int n = 4; n <= 10; n++) {
+		for (int n = 4; n <= 7; n++) {
+			tree.insert(n);
+			checkTree(2, n, 1, n);
+		}
+
+		for (int n = 8; n <= 10; n++) {
 			tree.insert(n);
 			checkTree(3, n, 1, n);
 		}
