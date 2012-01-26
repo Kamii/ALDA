@@ -8,6 +8,6 @@ ALDA VT11
     * SimpleLinkedList
     * DoubleStackArray
     * Algoritmanalys
-*   Week 4:
+*   Week 4: Password: H7grSpQ
     * AVLtree
     * Algoritmanalys
