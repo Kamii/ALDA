@@ -1,13 +1,13 @@
-% Alla i gruppen ska lÃ¤mna in individuellt i Moodle. 
-% Det ska dock vara samma fil fÃ¶r alla sÃ¥ att vi kan se vilka som har jobbat ihop.
+% Alla i gruppen ska lämna in individuellt i Moodle. 
+% Det ska dock vara samma fil för alla så att vi kan se vilka som har jobbat ihop.
 \documentclass[a4paper,10pt,oneside,onecolumn]{article}
 
 \usepackage[swedish]{babel}
 
-% FÃ¥r ni problem med att pdf-filen ser suddig ut pÃ¥ skÃ¤rmen sÃ¥ beror det pÃ¥ att ni inte har 
-% en fullstÃ¤ndig fontuppsÃ¤ttning och att bitmappade fonter i fel skala anvÃ¤nds. Den bÃ¤sta lÃ¶sningen 
-% Ã¤r att uppdatera fontuppsÃ¤ttningen, men man kan ocksÃ¥ plocka bort denna rad. Avstavning fungerar 
-% dock betydligt sÃ¤mre dÃ¥.
+% Får ni problem med att pdf-filen ser suddig ut på skärmen så beror det på att ni inte har 
+% en fullständig fontuppsättning och att bitmappade fonter i fel skala används. Den bästa lösningen 
+% är att uppdatera fontuppsättningen, men man kan också plocka bort denna rad. Avstavning fungerar 
+% dock betydligt sämre då.
 \usepackage[T1]{fontenc}
 
 \usepackage[latin1]{inputenc}
@@ -17,74 +17,380 @@
 \usepackage{url}
 \usepackage{listings}
 \usepackage{textcomp}
-\lstset{language=Java, tabsize=3, numbers=left, frame=line}
+\usepackage{color}
+\usepackage{hyperref}
+\hypersetup{linktocpage}
 
-% GlÃ¶m inte att uppdatera rubriken
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
 
-\title{ALDA VT12:TrÃ¤d samt mera algoritmanalys}
+\lstset{language=Java,
+basicstyle=\ttfamily,
+keywordstyle=\color{javapurple}\bfseries,
+stringstyle=\color{javared},
+commentstyle=\color{javagreen},
+morecomment=[s][\color{javadocblue}]{/**}{*/},
+numbers=left,
+numberstyle=\small\color{black},
+stepnumber=1,
+numbersep=10pt,
+tabsize=2,
+showspaces=false,
+showstringspaces=false}
 
-% Sortera gruppdeltagarna efter Efternamn. Om tvÃ¥ personer har samma efternamn sorteras dessa efter fÃ¶rnamnen.
-% Detta Ã¤r viktigt eftersom vissa uppgifter bestÃ¤ms av i vilken ordning namnen stÃ¥r. Tar man fel uppgift vid nÃ¥gon av dessa tillfÃ¤llen blir man automatiskt underkÃ¤nd.
+% Glöm inte att uppdatera rubriken
+\title{ALDA VT12:Träd samt mera algoritmanalys}
+
 \author{Leon Hennings\\leonh \and Kamyar Sajjadi\\kamy-saj}
 
 \begin{document}
 
 \maketitle
+\tableofcontents
+\paragraph{}
+Koden finns att ladda ner på \url{http://people.dsv.su.se/~kamy-saj/download/ALDA/}
 
-\section{}
-\lstinputlisting{AvlTree.java}
+Detta för att det ska bli lättare för er att göra en peer-review i er favorit editor. 
+
+\begin{center}
+Koden till zip-filen är: \textbf{H7grSpQ}
+\end{center}
+\newpage
+
+
+\section{AvlTree - size()}
+\begin{lstlisting}
+ /**                                                    
+  * Return size of the tree.                            
+  */                                                    
+ public int size()                                      
+ {                                                      
+   return size(root);                                   
+ }                                                      
+                                                        
+ /**                                                    
+  * Internal method to get the size.                    
+  * @param node the node that roots the subtree.        
+  * @return the size of the tree (int).                 
+  */                                                    
+ private int size(AvlNode<AnyType> node)                
+ {                                                      
+   if(node == null)                                     
+     return 0;                                          
+   else                                  
+     return size(node.left) + size(node.right) + 1;    
+ }                                                      
+\end{lstlisting}
+
+\newpage
+
+\section{AvlTree - maxHeight()}
+\begin{lstlisting}
+
+  /**
+   * Return the max height of the tree.
+   */
+  public int maxHeight()
+  {
+    return maxHeight(root);
+  }
+
+  /**
+   * Internal method to get the max height of the tree.
+   * @param node the node that roots the subtree.
+   * @return the max height of the tree. 
+   */
+  private int maxHeight(AvlNode<AnyType> node)
+  {
+    int height = 0;
+    
+    if(node == null)
+      return -1;
+    else
+      //returnera det högsta av det vänstra och det högra subträdet.          
+      return Math.max(maxHeight(node.left)+1, maxHeight(node.right)+1);
+  }   
+
+\end{lstlisting}
+\newpage
+
+
+\section{AvlTree - hasCorrectHeightInfo()}
+\begin{lstlisting}
+ /**
+  * Controll if the height of the tree is correct.
+  */
+ public boolean hasCorrectHeightInfo()
+ {
+   return hasCorrectHeightInfo(root);
+ }
+
+ /**
+  * Internal method to controll the height info
+  * @param node the node that we want to check
+  * @return true or false 
+  *
+  * Är absolut värdet av differansen för de två barnen 
+  * är större än 1 så är det något av subträden som 
+  * inte har korrekt höjd värde
+  * Annars, Om det barnnoden med högst vikt inte är 
+  * ett mindre än nodens höjd så har den fel höjd info
+  * Annars, returnera sant ifall de båda subträden har korrekt höjd
+  */
+ private boolean hasCorrectHeightInfo(AvlNode<AnyType> node)
+ {
+   if(node == null)                                                                   
+     return true;
+     
+   int diff = height(node.left) - height(node.right);
+   
+   if(Math.abs(diff)>1)
+     return false;
+   else if(node.height - Math.max(height(node.left), height(node.right)) != 1)
+     return false;
+   else 
+     return hasCorrectHeightInfo(node.right) && hasCorrectHeightInfo(node.left);
+ }  
+
+\end{lstlisting}
+\newpage
+
+\section{AvlTree - isSearchTree()}
+\begin{lstlisting}
+ /**                                                                         
+  * See if the tree is a binary tree.                                        
+  */                                                                         
+ public boolean isSearchTree()                                               
+ {                                                                           
+   return isSearchTree(root);                                                
+ }                                                                           
+                                                                             
+ /**                                                                         
+  * Internal method to control if the tree is a binary tree.                 
+  * @param node the node that roots the subtree.                             
+  * @return true if the tree is binary else false.                           
+  *                                                                          
+  * Undersöker om trädet är ett sökträd genom att se att                     
+  * högerbarn har högre värde och vänsterbarn har lägre värde                
+  * Ifall trädet är tomt returneras true.                                    
+  * Ifall det inte finns ett vänsterbarn sätts boolean l till true.          
+  * Annars jämförs elementets värde med vänsterbarnets värde.                
+  * Om vänsterbarnet är lägre kallas isSearchTree rekursivt                  
+  * på vänsterbarnet och sätter det till dess returvärde.                    
+  * Annars blir l false.                                                     
+  * Sedan görs motsvarande för högerbarnet.                                  
+  * Ifall både boolean l och boolean r satts till true                       
+  * returneras true.                                                         
+  */                                                                         
+ private boolean isSearchTree(AvlNode<AnyType> node)                         
+ {                                                                           
+   boolean l, r;                                                             
+                                                                             
+   // Basecase                                                               
+   if(isEmpty())                                                             
+     return true;                                                            
+                                                                             
+   if(node.left == null)                                                     
+     l = true;                                                               
+   else                                                                      
+   {                                                                         
+     int left = node.element.compareTo(node.left.element);                   
+     if(left > 0)                                                            
+       l = isSearchTree(node.left);                                          
+     else                                                                    
+       l = false;                                                            
+   }                                                                         
+                                                                             
+   if(node.right == null)                                                    
+     r = true;                                                               
+   else                                                                      
+   {                                                                         
+     int right = node.element.compareTo(node.right.element);                 
+     if(right < 0)                                                           
+       r = isSearchTree(node.right);                                         
+     else                                                                    
+       r = false;                                                            
+   }                                                                         
+   return l && r;                                                            
+ }                                                                           
+\end{lstlisting}
+\newpage
+
+\section{AvlTree - Remove()}
+\begin{lstlisting}
+  /**                                                          
+  * Remove from the tree. Nothing is done if x is not found.  
+  * @param x the item to remove.                              
+  */                                                          
+ public void remove( AnyType x )                              
+ {                                                            
+   if(isEmpty())                                              
+     System.out.println("The tree is empty");                 
+   else                                                       
+     root = remove(x, root);                                  
+ }                                                            
+
+/**                                                                                                        
+ * Internal method for remove.                                                                             
+ * @param x the item(element) to remove.                                                                   
+ * @param node the root node.                                                                              
+ * @return the root node after all changes.                                                                
+ */                                                                                                        
+public AvlNode<AnyType> remove( AnyType x, AvlNode<AnyType> node )                                         
+{                                                                                                          
+  if(node == null)                                                                         
+    return null; 
+  //Noden är mindre då går vi ner i vänstra barnet.                                                                                                
+  else if(x.compareTo(node.element) < 0)            
+  {                                                                                                        
+    //Anropa remove med vänsterbarnet och sätt nodens 
+    //vänsterbarn till det som remove kommer returnera.    
+    node.left = remove(x, node.left);                                                                      
+                                                                                                           
+    //Om trädet är obalanserat så kollar vi vilken sida 
+    //som är den tunga sidan och gör rotationerna.       
+    //Antingen är den "höger höger tung" eller så 
+    //är den "höger vänster tung".                             
+    if(height(node.right) - height(node.left) == 2)                                                        
+      if(height(node.right.right) >= height(node.right.left))                                              
+        node = rotateWithRightChild(node);                                                                 
+      else                                                                                                 
+        node = doubleWithRightChild(node);                                                                 
+                                                                                                           
+    //Uppdatera vikten i noden.                                                                            
+    node.height = maxHeight(node);                                                                         
+  }                                        
+  //Noden är större då går vi ner i högra barnet.                                                                    
+  else if(x.compareTo(node.element) > 0)                
+  {                                                                                                        
+    //Anropa remove med högerbarnet och sätt 
+    //det som returneras till noden högerbarn.                      
+    node.right = remove(x, node.right);                                                                    
+                                                                                                           
+    //Om trädet är obalanserat så kollar vi vilken 
+    //sida som är den tunga sidan och gör rotationerna.       
+    //Antingen är den "vänster vänster tung" eller så 
+    //är den "vänster höger tung"                          
+    if(height(node.left) - height(node.right) == 2)                                                        
+      if(height(node.left.left) >= height(node.left.right))                                                
+        node = rotateWithLeftChild(node);                                                                  
+      else                                                                                                 
+        node = doubleWithLeftChild(node);                                                                  
+                                                                                                           
+    //uppdatera vikten i noden.                                                                            
+    node.height = maxHeight(node);                                                                         
+  }                                                                                                        
+  else //Rätt nod är hittad. GRATTIS           
+    // Om den inte har något högerbarn ta det vänstra barnet. 
+    if(node.right == null)                       
+    {                                                                                                      
+      AvlNode<AnyType> tmpReturn = node.left;                                                              
+      node = null; // Ta bort den noden vi inte ska ha kvar.                                               
+      return tmpReturn; //returnerar det subträdet som ska kopplas.                                        
+    }                      
+    // Om den inte har något vänsterbarn ta det högra barnet.   
+    else if(node.left == null)                 
+    {                                                                                                      
+      AvlNode<AnyType> tmpReturn = node.right;                                                             
+      node = null;                                                                                         
+      return tmpReturn;                                                                                    
+    }                                                                                                      
+    else // Noden har två barn.                                                                            
+    {                                                                                                      
+      // rad 83: Hämta den högsta noden i vänstra barnet.
+      // rad 84: remove på findMax noden.   
+      // rad 85: sätter nodens element till vänstra barnets högsta element.      
+      AvlNode<AnyType> tmpReturn = findMax(node.left);          
+      remove(tmpReturn.element, node);                                        
+      node.element = tmpReturn.element; 
+    }                                                                                                      
+  return node;                                                                                             
+}                                                                                                          
+\end{lstlisting}
+\newpage
+
 
 
 \section{Algoritmanalys}
-Algoritm analys
-1. boolean add(E element)
-Metoden kallar konstruktorn fÃ¶r Element, vilken skapar nytt element och stoppar in den i listan genom att lÃ¤nka dess next till tail och dess previous till elemented innan tail.
-Eftersom alla operationer i add och operationerna som kÃ¶rs i konstruktorn Ã¤r konstanta blir Ã¤ven add metoden konstant.
+\subsection{boolean add(E element)}
+Metoden kallar konstruktorn för Element, vilken skapar nytt element och stoppar in den i listan genom att länka dess next till tail och dess previous till elemented innan tail.
+Eftersom alla operationer i add och operationerna som körs i konstruktorn är konstanta blir även add metoden konstant.
 
-2. public void add(int index, E element)
-Kallar fÃ¶rst checkIndex som bestÃ¥r av ett villkor som ifall det uppfylls kastar exception, denna metod Ã¤r konstant. O(1)
-Sedan kallas getElement som skapar ett temp element av head fÃ¶r att sedan loopa igenom listan fram till index. getElement Ã¤r linjÃ¤r, O(N).
-DÃ¤refter kallas Element konstruktorn som Ã¤r konstant och sedan Ã¶kas tvÃ¥ variabler med ett, vilket ocksÃ¥ gÃ¶rs pÃ¥ konstant tid.
-DÃ¥ alla satser gÃ¶rs sekventiellt Ã¤r det den stÃ¶rsat som avgÃ¶r ordo, vilken blir O(N).
+\subsection{void add(int index, E element)}
+Kallar först checkIndex som består av ett villkor som ifall det uppfylls kastar exception, denna metod är konstant. O(1)
+Sedan kallas getElement som skapar ett temp element av head för att sedan loopa igenom listan fram till index. getElement är linjär, O(N).
+Därefter kallas Element konstruktorn som är konstant och sedan ökas två variabler med ett, vilket också görs på konstant tid.
+Då alla satser görs sekventiellt är det den största som avgör ordo värdet, vilken blir O(N).
 
-3. addAll(Collection<? extends E>)
-BÃ¶rjar med en loop som gÃ¥r igenom hela den givna samlingen och kallar add(Element E) fÃ¶r varje element i den. add() Ã¤r konstant och loopen Ã¤r O(N).
-DÃ¤refter kallas size pÃ¥ den givna collectionen. Eftersom vi inte kan veta vilken sorts collection det Ã¤r fÃ¥r vi anta att den kan fÃ¥ loopa igenom hela listan fÃ¶r att fÃ¥ reda pÃ¥ antalet element i den.
-size Ã¤r dÃ¤rfÃ¶r i vÃ¤rsta fall O(M). Totala tidskomplexiteten blir dÃ¤rfÃ¶r O(N+M). Detta blir det hÃ¶gsta av O(M) och O(N) eftersom vi inte rÃ¤knar konstanter.
+\subsection{boolean addAll(Collection<? extends E>)}
+Börjar med en loop som går igenom hela den givna samlingen och kallar add(Element E) för varje element i den. add() är konstant och loopen är O(N).
+Därefter kallas size på den givna collectionen. Eftersom vi inte kan veta vilken sorts collection det är får vi anta att den kan få loopa igenom hela listan för att få reda på antalet element i den.
+size är därför i värsta fall O(N). Totala tidskomplexiteten blir därför O(2N), O(N) eftersom vi inte räknar konstanter.
 
- ocksÃ¥ O(N). Totala tidskomplexiteten blir dÃ¤rfÃ¶r O(2N), O(N) eftersom vi inte rÃ¤knar konstanter.
+\subsection{boolean addAll(int index, Collection<? extends E>)}
+Som metoden ovan har den en loop som itererar N varv. 
+I loopen kallas add(int index, Element E) som i värsta fall går igenom hela this och därför är O(M) vilket gör tidskomplexiteten för loopen till O(NM).
 
-4. addAll(int index, Collection<? extends E>)
-Som metoden ovan har den en loop som itererar N varv. I loopen kallas add(int index, Element E) som Ã¤r O(N) vilket gÃ¶r tidskomplexiteten fÃ¶r loopen till O($N^{2}$).
-
-5. public int indexOf(Object o)
-Denna metod har en loop som gÃ¥r igenom samtliga element i den lÃ¤nkade listan. SjÃ¤lva loophuvudet har en tidskomplexitet pÃ¥ O(N). I loopen Ã¤r det en if else sats med villkor som kollar om det givna objektet Ã¤r null, om det inte Ã¤r det sÃ¥ jÃ¤mfÃ¶rs objectet med ett element i listan med hjÃ¤lp av equals metoden. DÃ¥ det givna objectet mycket vÃ¤l skulle kunna vara en array som mÃ¥ste jÃ¤mfÃ¶ra varje index med elementet, mÃ¥ste vi anta att .equals Ã¤r O(M).
+\subsection{int indexOf(Object o)}
+Denna metod har en loop som går igenom samtliga element i den länkade listan. Själva loophuvudet har en tidskomplexitet på O(N).
+I loopen är det en if else sats med villkor som kollar om det givna objektet är null, om det inte är det så jämförs objectet med 
+ett element i listan med hjälp av equals metoden. Då det givna objectet mycket väl skulle kunna vara en array som måste jämföra 
+varje index med elementet, måste vi anta att .equals är O(M). Allt annat i if-satsen görs på konstant tid.
 Detta ger tidskomplexiteten O(NM).
-DÃ¥ vi inte vet vad det Ã¤r fÃ¶r slags objekt som finns i listan skulle det kunna vara hÃ¶gre tidskomplexitet fÃ¶r equals, men vi antar hypotesen om den gode programmeraren att det inte Ã¤r en rysk babuschka docka av datasamlingar i datasamlingar i vÃ¥r lista.
+Då vi inte vet vad det är för slags objekt som finns i listan skulle det kunna vara högre tidskomplexitet för equals, men vi 
+antar hypotesen om den gode programmeraren att det inte är en rysk babuschka docka av datasamlingar i datasamlingar i vår lista.
 
-6. lastIndexOf(Object o)
-FÃ¶rst skapas en listIterator, i dess konstruktor kallas checkIndex som Ã¤r konstant och sedan returneras en ny iterator med ett anrop till getElement som har tidskomplexiteten O(N).
-Sedan kÃ¶rs en while loop med hasPrevious som villkor. hasPrevious Ã¤r konstant och while loopen kommer som vÃ¤rst gÃ¥ igenom hela listan vilket ger loophuvudet O(N).
-I while loopen kallas fÃ¶rst previous som returnerar element fÃ¶re i listan pÃ¥ konstant tid.
-Efter det Ã¤r det en if sats som kollar om objektet Ã¤r null, annars kollar den ifall objektet Ã¤r lika med elementet som pekats ut av iteratorn, med hjÃ¤lp av equals. Som tidigare antar vi att equals Ã¤r O(M).
-Ifall vilkoret uppfylls kÃ¶rs nextIndex som tar konstant tid.
-While loopens N gÃ¥nger equals N ger O(NM)
+\subsection{int lastIndexOf(Object o)}
+Först skapas en listIterator, i dess konstruktor kallas checkIndex som är konstant och sedan returneras en ny iterator med ett anrop till getElement som har tidskomplexiteten O(N).
+Sedan körs en while loop med hasPrevious som villkor. hasPrevious är konstant och while loopen kommer som värst gå igenom hela listan vilket ger loophuvudet O(N).
+I while loopen kallas först previous som returnerar element före i listan på konstant tid.
+Efter det är det en if sats som kollar om objektet är null, annars kollar den ifall objektet är lika med elementet som pekats ut av iteratorn, 
+med hjälp av equals. Som tidigare antar vi att equals är O(M).
+Ifall vilkoret uppfylls körs nextIndex som tar konstant tid. While loopens N gånger equals M ger O(NM).
 
-7.  boolean retainAll(Collection<?> c)
-FÃ¶rst gÃ¶rs tvÃ¥ programsatser pÃ¥ konstant tid.
-DÃ¤refter kommer en while loop som kÃ¶r N gÃ¥nger.
-I while loopen ligger ett villkor som kollas varje gÃ¥ng. Villkoret anropar get() och jÃ¤mfÃ¶r dess returvÃ¤rde med containsmetoden.
+\subsection{boolean retainAll(Collection<?> c)}
+Först görs två programsatser på konstant tid. Därefter kommer en while loop som kör N gånger.
+I while loopen ligger ett villkor som kollas varje gång. Villkoret anropar get() och jämför dess returvärde med containsmetoden för samlingen.
 get() anropar checkIndex som tar konstant tid och getElement som tar O(N).
-contains har en loop som kÃ¶r N gÃ¥nger och i den loopen en ett villkor som anropar equals vilket gÃ¶r att loopen tar O($N^{2}$) i vÃ¤rsta fall.
-DÃ¥ anropet av get gÃ¶rs fÃ¶re contains kommer deras ordo vÃ¤rden inte multipliceras utan endast contains O($N^{2}$) rÃ¤knas.
-Ifall villkoret inte uppfylls kallas remove(index) metoden som i sin tur kallar getElement, vilket gÃ¶r att den till O(N).
-Denna ligger i sekvens med contains och dÃ¤rfÃ¶r blir loopens innehÃ¥ll O($N^{2}$) + O(2N) vilket fÃ¶renklas till O($N^{2}$).
-Detta multiplicerat med while loopens iterationer ger O($N^{3}$).
-\section{PoolfrÃ¥ga}
+Collections contains metod har vi ingen information om men vi antar att den är O(M) där M är samlingens storlek.
+Då anropet av get görs före contains kommer deras ordo värden inte multipliceras utan endast contains O(M) räknas.
+Ifall villkoret inte uppfylls kallas remove(index) som i sin tur kallar getElement vilken är O(N).
+Denna ligger i sekvens med contains och därför blir loopens innehåll O(M) + O(2N) vilket förenklas till O(N).
+Detta multiplicerat med while loopens iterationer ger O($N^{2}$).
+
+\newpage
+\section{Poolfråga}
+\subsection{Fråga 1}
+Hur stor skillnad blir tidskomplexiteten för sökning i ett obalanserat träd jämfört med ett balanserat träd? 
+Hur stor blir höjdskillnaden om vi exempelvis sätter in talen 1 till 10 i sekvens.
+
+\subsection{Fråga 2}
+Givet en viss serie insättningar och borttagningar, vilka rotationer kommer göras i AVL trädet?
+
+a) 1, 2 , 3 
+
+b) 1, 3 , 2 
+
+c) 3 , 2 , 1
+
+d) 3, 1 , 2 \\
+Löses för högre betyg:
+
+e) 2 , 1 ,  4  , 3 , remove(1) 
+
+f) 1, 2 , 3 , 4 , 5 , 6 , 7 , remove(4), remove(5), remove(6)
+
+g) Ifall man lägger till värdena 1 till 100 i sekvens i ett AVL träd kommer bara en sorts rotation att göras, vilken?
+
+\subsection{Fråga 3}
+När en datastruktur blir för stor för att få plats i primärminnet kommer dess hastighet begränsas av antalet accesser till skivminnet. 
+Nämn en trädstruktur som löser detta och beskriv hur den fungerar.
 
 %\lstinputlisting[firstline=3, lastline=5]{SimpleLinkedList.java}
 
-% NedanstÃ¥ende Ã¤r bara fÃ¶r om ni vill anvÃ¤nda bibtex fÃ¶r att hantera referenser. 
+% Nedanstående är bara för om ni vill använda bibtex för att hantera referenser. 
 
 %\bibliographystyle{plain}
 %\bibliography{bibtex}
