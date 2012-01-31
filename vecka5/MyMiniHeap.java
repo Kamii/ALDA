@@ -5,7 +5,6 @@ package vecka5;
  * @author Leon Hennings
  * @author Kamyar Sajjadi
  * with help from Mark Allen Weiss 
- * kkthxbye
  */
 public class MyMiniHeap<T extends Comparable<? super T>> implements MiniHeap<T>
 {
