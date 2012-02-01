@@ -1,4 +1,4 @@
-package alda;
+package vecka5;
 
 import static org.junit.Assert.*;
 
@@ -297,6 +297,7 @@ public class MyMiniHeapTest {
 		int smallest = largeHeap.findMin();
 		for(int i=0; i<nrOfElements; i++) {
 			int temp = largeHeap.deleteMin();
+			System.out.println(smallest + " " + temp);
 			assertTrue(smallest <= temp);
 			smallest = temp;
 		}
