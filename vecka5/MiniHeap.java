@@ -1,4 +1,4 @@
-package alda;
+package vecka5;
 
 public interface MiniHeap<T extends Comparable<? super T>> {
 

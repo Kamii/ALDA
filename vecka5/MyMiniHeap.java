@@ -44,7 +44,26 @@ public class MyMiniHeap<T extends Comparable<? super T>> implements MiniHeap<T>
 	 */
 	public void insert(T element);
 	{
+		if( currentSize == array.length - 1 )
+			enlargeArray( array.length * 2 + 1 );
+
 		int hole = ++size;
+		for( ; hole > 1 && x.compareTo( array[getParent()] ) < 0; getParent() )
+			array[ hole ] = array[getParent()];
+		array[ hole ] = x;
+	}
+
+	/**
+	 * Method to enlarg the array
+	 * @param int the new size of the array
+	 */
+	@SuppressWarnings("unchecked")
+	private void enlargeArray( int newSize )
+	{
+		AnyType [] old = array;
+		array = (AnyType []) new Comparable[ newSize ];
+		for( int i = 0; i < old.length; i++ )
+			array[ i ] = old[ i ];        
 	}
 
 	/**
@@ -105,6 +124,7 @@ public class MyMiniHeap<T extends Comparable<? super T>> implements MiniHeap<T>
 	 */
 	public int getChild(int parent);
 	{
+		return d * (parent - 1) + 2;
 	}
 
 	/**
@@ -117,5 +137,6 @@ public class MyMiniHeap<T extends Comparable<? super T>> implements MiniHeap<T>
 	 */
 	public int getParent(int child);
 	{
+		return (child - 2 / d) + 1;
 	}
 }
