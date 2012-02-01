@@ -104,8 +104,8 @@ public class MyMiniHeap<T extends Comparable<? super T>> implements MiniHeap<T>
 			
 			for(int i = 0; i<d; i++)
 			{
-				if(child+i <= size && heap[child + i].compareTo(heap[child]) < 0)
-					child = child + i;
+				if(child+i <= size && heap[getChild(hole) + i].compareTo(heap[child]) < 0)
+					child = getChild(hole) + i;
 			}
 			if( heap[child].compareTo(tmp) < 0 )
 				heap[ hole ] = heap[child];
@@ -114,22 +114,6 @@ public class MyMiniHeap<T extends Comparable<? super T>> implements MiniHeap<T>
 		}
 		heap[ hole ] = tmp;
 	}
-
-//	or( ; getChild(hole) <= size(); hole = child) {
-//		child = getChild(hole);
-//		int tempChild = getChild(hole);
-//
-//		for(int i = 0; i < d && tempChild != size(); i++, tempChild++){
-//			if(heapArray[tempChild + 1].compareTo(heapArray[child]) < 0){
-//				child = tempChild + 1;
-//			}
-//		}
-//
-//		if (heapArray[child].compareTo(tempElement) < 0)
-//			heapArray[hole] = heapArray[child];
-//		else
-//			break;
-//	}
 
 	/**
 	 * Finds and returns the smallest element in the heap.
