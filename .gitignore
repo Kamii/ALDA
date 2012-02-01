@@ -3,3 +3,9 @@
 
 # Ignore .class ofc
 *.class
+
+# Ignore LaTex 
+*.png
+*.aux
+*.log
+*.out
