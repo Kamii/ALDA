@@ -20,6 +20,7 @@
 \usepackage{color}
 \usepackage{hyperref}
 \hypersetup{linktocpage}
+\usepackage{xspace,graphicx}
 
 \definecolor{javared}{rgb}{0.6,0,0} % for strings
 \definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
@@ -114,42 +115,249 @@ public class MyMiniHeap<T extends Comparable<? super T>> implements MiniHeap<T>
 \end{lstlisting}
 \newpage
 
-\section{MyMiniHeap - }
+\section{MyMiniHeap - public void insert(T element)}
 \begin{lstlisting}
+ /**
+  * Inserts an element into the heap, placing it correctly according to heap
+  * properties.
+  * @param element the element to insert.
+  * @throws IllegalArgumentException if the element to insert is null.
+  * hole är den första tomma platsen. I metoden finns det en loop
+  * Denna loop kollar om föräldrarna behöver flyttas, detta då det 
+  * nya elementet kan vara mindre än element som redan finns i listan. 
+  * Vi använder oss av getParent(int) för att få föräldern för varje 
+  * element. 
+  */
+ public void insert(T element)
+ {
+   if(element == null)
+     throw new IllegalArgumentException();
+
+   if( size == heap.length - 1 )
+     enlargeheap(heap.length * 2+1);                                                                
+
+   int hole = ++size;
+   for( ; hole > 1 && element.compareTo( heap[getParent(hole)] ) < 0; hole = getParent(hole) )
+     heap[ hole ] = heap[getParent(hole)];
+   heap[ hole ] = element;
+ }
 
 \end{lstlisting}
 \newpage
 
 
-\section{MyMiniHeap - }
+\section{MyMiniHeap - private void enlargeheap(int newSize)}
 \begin{lstlisting}
-
+  /**                                            
+   * Method to enlarge the heap
+   * @param int the new size of the heap
+   */
+  @SuppressWarnings("unchecked")
+  private void enlargeheap( int newSize )
+  {
+    T [] old = heap;
+    heap = (T []) new Comparable[ newSize ];
+    for( int i = 0; i < old.length; i++ )
+      heap[ i ] = old[ i ];        
+  }
 \end{lstlisting}
 \newpage
 
-\section{MyMiniHeap - }
+\section{MyMiniHeap - private void percolateDown(int hole)}
 \begin{lstlisting}
-                          
+ /**                                                                                        
+  * Internal method to percolate down in the heap.
+  * @param hole the index at which the percolate begins.
+  */
+ private void percolateDown(int hole)
+ {
+   int child;
+   T tmp = heap[ hole ];
+
+   for( ; getChild(hole) <= size; hole = child )
+   {
+     child = getChild(hole);
+     
+     //Kollar vilket av barnen som är det minsta och sätter 
+     //variabeln child till detta barn. 
+     for(int i = 0; i<d; i++)
+       if(child+i <= size && heap[getChild(hole) + i].compareTo(heap[child]) < 0)
+         child = getChild(hole) + i;
+
+     if( heap[child].compareTo(tmp) < 0 )
+       heap[ hole ] = heap[child];
+     else
+       break;
+   }
+   heap[ hole ] = tmp;
+ }                                                                                           
 \end{lstlisting}
 \newpage
 
-\section{MyMiniHeap - }
+\section{MyMiniHeap - public int getChild(int parent)}
 \begin{lstlisting}
-                                                                                           
+ /**                                                                              
+  * Finds the index of the first child for a given parent's index. This
+  * method is normally private, but is used to test the correctness of the
+  * heap.
+  * 
+  * @param parent the index of the parent.
+  * @return an integer with the index of the parent's first child.
+  */
+ public int getChild(int parent)
+ {
+   return d * (parent - 1) + 2;
+ }
 \end{lstlisting}
 \newpage
+
+\section{MyMiniHeap - public int getParent(int child)}
+\begin{lstlisting}
+ /**
+  * Finds the index of a parent for a given child's index. This method is
+  * normally private, but is used to test the correctness of the heap.
+  * 
+  * @param child the index of the child.
+  * @return an integer with the child's parent's index.
+  */
+ public int getParent(int child)
+ {
+   return ((child - 2) / d) + 1;
+ }                                                                                      
+\end{lstlisting}
+\newpage
+
 
 
 \section{Hashing}
+% Hashtabeller
+Hashing är ett sätt att placera in element i en tabell för att sedan snabbt kunna leta upp dem.  
+Detta görs baserat på ett datafält i elementet vilket kallas för dess nyckel. En hashfunktion 
+kommer med hjälp av nyckeln och storleken på tabellen att generera den plats som datan ska lagras på. 
+Då elementets plats i datastrukturen är en funktion av nyckeln kan sökning därför göras på konstant 
+tid genom att mata in nyckeln för det sökta elementet, beräkna dess hashvärde och hämta elementet på 
+platsen motsvarande detta.
+Detta gör att det går snabbt att göra insättningar, borttag och sökningar hashtabeller.
+Undantaget för detta är de fall då hashfunktionen beräknar samma värde för två olika nycklar, detta 
+kallas en kollision och gör att elementet måste placeras på en annan plats i tabellen.
+Effektivitet för hashtabeller påverkas därför inte av hur stor tabellen är utan istället pratar 
+man om load factor, hur många element det är i tabellen jämfört med storleken på tabellen. 
 
+% Hashfunktioner
+Hashfunktionen beräknar ett värde baserat på elementets nyckel och får då ett värde som används för 
+att indexera elementet i hashtabellen. Hashfunktionen måste vara referentiell transparent, dvs, den 
+måste alltid generera samma hashvärde för en viss nyckel. 
+Genom att generera ett hashvärde för ett sökt elements nyckel får man möjlighet att komma åt samma 
+index utan att behöva gå igenom listan i onödan. Hashfunktioner måste kunna generera värden som 
+distribuerar elementen så jämt som möjligt över hela tabellens längd. Beroende på vad nyckeln är 
+kan hashfunktionerna behöva fungera väldigt olika. String klassen i java använder följande för 
+att beräkna hashCode():
+\begin{verbatim}
+s[0]*31^(n-1) + s[1]*31^(n-2) + ... + s[n-1]
+\end{verbatim}
+För att beräkna hashvärdet för ett heltal är det vanligt att använda nyckeln modulo hashtabellens 
+längd som hashfunktion.
+I java heter hashfunktionen hashCode() och alla klasser måste ha en. Default hashCode funktionen använder 
+JVMs interna 32-bits adress till Object vilket gör den oanvändbar för sökning då identiska objekt inte 
+kommer få samma hashvärde.
+
+% Separete chaining
+I vissa fall kan hashfunktionen generera samma värde för olika element. Detta innebär att dessa element 
+ska dela på samma plats. Ett sätt att lösa detta på är genom att använda sig av Separete chaining. 
+Det fungerar på så sätt att varje plats i hashtabellen innehåller en referens som pekar ut det första 
+elementet som är lagrat på den platsen. Varje element i sig refererar till nästa element som har samma 
+hashvärde. Med andra ord så pekar referensen till det första elementet i en länkad lista. 
+När ett element ska läggas till och hashvärdet blir den samma som ett annat elements hashvärde så kommer 
+det nya elementet att läggas in längst fram i den länkade listan. Nu kommer platsen i hashtabellen att 
+referera till det nya elementet och det nya elementet kommer att referera till det elementet som låg 
+först innan insättningen. Anledningen till att man oftast använder sig av en länkad lista framför träd 
+eller andra datastrukturer är att det är inte tänkt att listorna ska bli så långa. Om man har en 
+hashfunktion som genererar värden som inte krockar så ofta för olika element så kommer listan aldrig 
+att bli så stor och därför finns det ingen anledning att använda sig av avancerade datastrukturer. 
+Hashtabeller som använder separate chaining kan väntas prestera bra upp till en load faktor av 1.
+Eftersom separate chaining använder sig av länkade listor gör det insättningar av element långsamt. 
+Några alternativa sätt att lösa kollisioner finns under samlingsnamnet open addressing och innefattar 
+linear probing, quadratic probing och double hashing. 
+
+% Linear probing
+Ett annat sätt att lösa kollisioner av hashvärden med open addressing heter linear probing.
+Det fungerar på så vis att när en kollison uppstår söks tabellen igenom sekvensiellt tills en tom plats 
+upptäcks. Ifall slutet av tabellen nås fortsätter sökningen i början av tabellen.
+Detta kan resultera i att block av av element lagras i sekvens i hashtabellen och kallas primär klustring. 
+Klustringen gör också så att sökning efter element kan ta lika lång tid som insättning.
+Linear probings effektivitet minskar desto mer tabellen fylls men kan väntas prestera väl så länge tabellen 
+inte har en load factor på 0.5. 
+
+% Quadratic probing
+För att undvika klustringen som uppstår vid linjär probing kan man istället implementera quadratic probing. 
+Det fungerar på liknande vis som linear probing med skillnaden att det söker med ett intervall som ökar 
+kvadratiskt. Detta förhindrar att kluster uppstår men istället uppstår en annan komplikation, det inte 
+garanterat att en tom plats kan hittas. Så länge tabellens storlek är ett primtal så kan man förutsätta 
+att det går att sätta in element så länge tabellens load factor är mindre än 0.5. 
+
+Eftersom både linear och quadratic probing förlitar sig på andra tidigare insatta element vid sökning så 
+skapar detta komplikationer vid borttagning av elementen. Därför är det nödvändigt att använda lazy 
+deletion i probande hashtabeller. Man markerar elementen som borttagna och hoppar över dem vid sökning 
+tills tabellen blir för full och då de tas bort och tabellen rehashas.
+
+% Double hashing
+Double hashing är ett annat sätt att lösa kollisions problemet som uppstår vid generering av hash värden. 
+Metoden går ut på att när en kollison uppkommer så kommer en annan hash funktion att anropas. Denna hash 
+funktion kommer att returnera hur många platser längre fram i hash tabellen det ska ske en insättning. 
+Om en ny kollision uppkommer vid det nya indexet så kommer samma process att upprepas tills en tom plats 
+hittas. Det viktiga är att denna hashfunktion ej returnerar värdet 0. Om den skulle returnera 0 så skulle 
+det innebära att den inte kommer att undersöka någon annan plats för insättning av det nya elementet. En 
+annan sak man måste ta hänsyn till är att hash tabellens storlek ska vara ett primtal. Detta för att 
+hashvärdet som genereras ska få alla möjliga platser i tabellen. 
+Nackdelen med att använda sig av double hashing kan vara om det krävs mycket resurser för att generera 
+ett hashvärde. Exempel på detta är string som har hash funktioner som är en dyrbar operation. 
+
+% Rehashing
+När en hashtabell blir för full kommer insättning och sökning börja ta för lång tid. Lösningen på detta 
+är att skapa en ny tabell som är närmsta primtalet till det dubbla av aktuella storleken. Sedan sätter 
+man in alla element i den nya tabellen baserat på nya hashvärden. Det är en dyr operation eftersom den 
+måste gå igenom alla element och flytta dem till den nya tabellen, men eftersom det sker sällan är det okej.
+
+% Användningsområden för hashfunktion
+Hashfunktioner används i andra situationer än hashtabeller. Bland annat så används det för att generera 
+checksums för filer så man kan upptäcka om datan är korrumperad. Inom kryptering används också hashfunktioner, 
+kallade envägs funktioner, för att bland annat omvandla lösenord till ett tillstånd som är svårt att dekonstruera 
+men som lätt kan nås genom att ge samma lösenord igen och jämföra dess hashvärde med det lagrade. 
+Andra saker hashfunktioner används till är bloom filter som avgör om element är en del av ett set och i transposition tables. 
+Transposition tables används i spel för att lagra sekvenser av operationer för slippa upprepa beräkningar 
+av dem, t ex använder sig Schack datorer av detta.
+
+% lämpligt att använda de olika varianterna på kollisionshantering
+I vissa tillfällen är det nödvändigt att tänka på vilken kollisionshanteringsmetod man använder sig av. 
+Till exempel kräver separate chaining extra minne och tid för att skapa nya noder vid insättning av element.
+Om elementen är stora är denna extra minnesanvändning försumbar men om mindre element lagras kan minnesanvändningen vara överdriven. 
+Därför är separate chaining mer effektiv för lagring av större element och linear probing är bättre för små element.
+Jämfört med open adressing är tiden för sökning mer eller mindre konstant även vid högre load faktorer. Detta 
+eftersom den som värst behöver gå igenom de element som hashats till samma värde. Användning av open addressing 
+kan leda till bildning av kluster som i värsta fall gör att sökningars tidskomplexitet är kvadratisk vid hög load faktor.
+Hash tabeller som använder open adressing  bör inte ha en load faktor på över 0.5 vilket leder till att mycket 
+utrymme går till spillo. Det orsakar också att tabellens utrymme måste ökas oftare och detta tar ännu mer tid pga rehashning.
+Separate chaining är att föredra om man förväntar sig en hög load faktor och open addressing mer lönsam om det är låg load faktor.
 
 \newpage
 \section{Poolfråga}
 \subsection{Fråga 1}
+För objekt av typen person, med attributen str:namn, str:adress, int:ålder och int:personnummer, 
+beskriv en hashfunktion för att lagra dem i en hashtabell. Argumentera för varför detta kommer 
+ge minimalt antal kollisioner.
 
 \subsection{Fråga 2}
+Förklara varför längden på hashtabeller generellt bör vara ett primtal. 
+För högre betyg ska du även ange en typ av kollisionshantering där det är kritiskt att tabellängden är ett 
+primtal, visa varför det är så och vad som kan hända ifall tabellens längd inte är ett primtal.
 
 \subsection{Fråga 3}
+Beskriv de strukturella krav som en prioritetskö måste uppfylla och de operationer den måste ha. 
+Ge exempel på en situation då en prioritetskö är att föredra över en vanlig kö.
+
+\subsection{Fråga 4}
+Ge exempel på två enkla sätt att implementera en prioritetskö med en länkad lista. För högre 
+betyg ska du argumentera för vilken du tycker är bäst och varför.
 
 %\lstinputlisting[firstline=3, lastline=5]{SimpleLinkedList.java}
 
