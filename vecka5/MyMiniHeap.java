@@ -58,9 +58,10 @@ public class MyMiniHeap<T extends Comparable<? super T>> implements MiniHeap<T>
 	 * properties.
 	 * @param element the element to insert.
 	 * @throws IllegalArgumentException if the element to insert is null.
-	 * hole är den första tomma platsen. Loopen kollar om föräldrarna behöver 
-	 * flyttas, detta då det nya elementet kan vara mindre än element som redan 
-	 * finns i listan. Vi använder oss av getParent(int) för att få föräldern för varje 
+	 * hole är den första tomma platsen. I metoden finns det en loop
+	 * Denna loop kollar om föräldrarna behöver flyttas, detta då det 
+	 * nya elementet kan vara mindre än element som redan finns i listan. 
+	 * Vi använder oss av getParent(int) för att få föräldern för varje 
 	 * element. 
 	 */
 	public void insert(T element)
@@ -92,10 +93,8 @@ public class MyMiniHeap<T extends Comparable<? super T>> implements MiniHeap<T>
 
 	/**
 	 * Deletes the smallest element in the heap.
-	 * 
 	 * @return the smallest element in the heap.
-	 * @throws IllegalStateException
-	 *             if the heap is empty.
+	 * @throws IllegalStateException if the heap is empty.
 	 */
 	public T deleteMin()
 	{
@@ -122,11 +121,12 @@ public class MyMiniHeap<T extends Comparable<? super T>> implements MiniHeap<T>
 		{
 			child = getChild(hole);
 			
+			//Kollar vilket av barnen som är det minsta och sätter 
+			//variabeln child till detta barn. 
 			for(int i = 0; i<d; i++)
-			{
 				if(child+i <= size && heap[getChild(hole) + i].compareTo(heap[child]) < 0)
 					child = getChild(hole) + i;
-			}
+
 			if( heap[child].compareTo(tmp) < 0 )
 				heap[ hole ] = heap[child];
 			else
