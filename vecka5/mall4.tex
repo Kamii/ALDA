@@ -137,7 +137,9 @@ public class MyMiniHeap<T extends Comparable<? super T>> implements MiniHeap<T>
      enlargeheap(heap.length * 2+1);                                                                
 
    int hole = ++size;
-   for( ; hole > 1 && element.compareTo( heap[getParent(hole)] ) < 0; hole = getParent(hole) )
+
+   for( ; hole > 1 && 
+        element.compareTo(heap[getParent(hole)]) < 0; hole=getParent(hole))
      heap[ hole ] = heap[getParent(hole)];
    heap[ hole ] = element;
  }
@@ -181,7 +183,8 @@ public class MyMiniHeap<T extends Comparable<? super T>> implements MiniHeap<T>
      //Kollar vilket av barnen som är det minsta och sätter 
      //variabeln child till detta barn. 
      for(int i = 0; i<d; i++)
-       if(child+i <= size && heap[getChild(hole) + i].compareTo(heap[child]) < 0)
+       if(child+i <= size && 
+               heap[getChild(hole) + i].compareTo(heap[child]) < 0)
          child = getChild(hole) + i;
 
      if( heap[child].compareTo(tmp) < 0 )
