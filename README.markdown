@@ -11,6 +11,6 @@ ALDA VT11
 *   Week 4: Password: H7grSpQ
     * AVLtree
     * Algoritmanalys
-*		Week 5: Password: FgH9sg6
-		* Hashing
-		* d-heap
+*   Week 5: Password: FgH9sg6  
+    * d-heap
+    * Artikel om Hashing
