@@ -153,6 +153,7 @@ public class SortingAlgorithmsTester {
 		private ListConfigurationStrategy duplicationstrategy;
 
 		private double timeToRunLastTest = Double.MIN_VALUE;
+		private boolean crashOnLastRun = false;
 		private List<Test> tests = new ArrayList<Test>();
 
 		public TestConfiguration(Sorter sorter, DataGenerator datagenerator,
@@ -168,7 +169,8 @@ public class SortingAlgorithmsTester {
 
 		public double run(int size) {
 			double testTime = -1.0;
-			if (timeToRunLastTest < MAX_TIME_FOR_TEST_IN_SECONDS) {
+			if (timeToRunLastTest < MAX_TIME_FOR_TEST_IN_SECONDS
+					&& !crashOnLastRun) {
 				System.gc();
 				List list = listcreator.createList();
 				datagenerator.generate(list, size);
@@ -179,6 +181,7 @@ public class SortingAlgorithmsTester {
 				try {
 					timeToRunLastTest = testTime = sorter.sort(list);
 				} catch (Exception e) {
+					crashOnLastRun = true;
 					System.err.println("Exception caught while sorting");
 					e.printStackTrace();
 				}
@@ -354,17 +357,15 @@ public class SortingAlgorithmsTester {
 
 		private static final Random RND = new Random();
 
-		private void swap(List l, int index1, int index2) {
-			Object o = l.get(index1);
+		private void copy(List l, int index1, int index2) {
 			l.set(index1, l.get(index2));
-			l.set(index2, o);
 		}
 
 		public void createDuplicates(List l, int maxNoDuplicates) {
 			int count = 0;
 			do {
 				count++;
-				swap(l, RND.nextInt(l.size()), RND.nextInt(l.size()));
+				copy(l, RND.nextInt(l.size()), RND.nextInt(l.size()));
 			} while (count < maxNoDuplicates);
 		}
 	}

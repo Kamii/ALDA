@@ -3,9 +3,8 @@ package alda.sort;
 import java.util.List;
 
 /**
- * Detta är en av algoritmerna du ska implementera själv. Algoritmen ska vara
- * quicksort, och pivotvärdet ska väljas slumpmässigt, det som på
- * sidan 266 i boken förklaras vara "a safe maneuver".
+ * Quicksort, mer eller mindre rakt av från boken. Pivotvärdet väljs med
+ * median-of-three.
  * 
  * För information om quicksort generellt: se kursboken sidan 264 och framåt.
  * Tänk dock på att implementationen i boken jobbar på arrayer, men den här
@@ -15,7 +14,7 @@ import java.util.List;
 public class QuickSorterMedianOfThree<T extends Comparable<? super T>> extends
 		Sorter<T> {
 
-	private static final int CUTOFF = 20;
+	private static final int CUTOFF = 10;
 
 	private void insertionSort(List<T> l, int left, int right) {
 		int j;
