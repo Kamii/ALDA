@@ -33,7 +33,11 @@ public class QuickSorterRandom<T extends Comparable<? super T>> extends Sorter<T
 			T pivot = random(l, left, right);
 
 			int i = left-1;
-			int j = right;
+			int j = right+1;
+
+//			System.out.println(i);
+//			System.out.println(j);
+//			System.out.println();
 
 			for (;;) {
 				while (l.get(++i).compareTo(pivot) < 0) {
@@ -50,10 +54,6 @@ public class QuickSorterRandom<T extends Comparable<? super T>> extends Sorter<T
 
 			quicksort(l, left, i - 1); // sort small elements
 			quicksort(l, i + 1, right); // sort large elements
-//			System.out.println("\n");
-//			System.out.println("Detta är pivot: "+ pivot);
-//			for(int e = 0 ; e<=right; e++)
-//				System.out.print(l.get(e)+" ");
 		} else 
 		{
 			insertionSort(l, left, right);
@@ -64,7 +64,6 @@ public class QuickSorterRandom<T extends Comparable<? super T>> extends Sorter<T
 	{
 		Random rnd = new Random();
 		int pivoNr = rnd.nextInt(right-left)+left;
-		System.out.print(pivoNr+ " ");
 
 		swap(l, pivoNr, right);
 		return l.get(right);
@@ -76,19 +75,28 @@ public class QuickSorterRandom<T extends Comparable<? super T>> extends Sorter<T
 		quicksort(l, 0, l.size() - 1);
 	}
 
+//	private static void copy(List l, int index1, int index2) {
+//		l.set(index1, l.get(index2));
+//	}
+
 	@SuppressWarnings("unchecked")
 	public static void main (String[]args)
 	{
 		List<Integer> myList = new ArrayList<Integer>();
 
 		Random r = new Random();
-		for(int e = 0; e<10000; e++)
-			myList.add(r.nextInt(20000));
+		int maxNoDuplicates = (myList.size() / 100); 
+		int count = 0;
 
-		System.out.println(myList);
+//		for(int e = 0; e<100; e++)
+//			myList.add(r.nextInt(20000));
+//
+//		do {
+//			count++;
+//			copy(myList, r.nextInt(myList.size()), r.nextInt(myList.size()));
+//		} while (count < maxNoDuplicates);
 
 		QuickSorterRandom rn = new QuickSorterRandom();
 		rn.doSort(myList);
-		System.out.println("\n"+ myList);
 	}
 }
