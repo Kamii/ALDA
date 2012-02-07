@@ -1,24 +1,103 @@
-package alda.sort;
-
+//package alda.sort;
+import java.util.*;
 import java.util.List;
+import java.util.LinkedList;
+import java.util.ListIterator;
 
 /**
- * Detta ‰r en av algoritmerna du ska implementera sj‰lv. Algoritmen ska vara
- * quicksort, och pivotv‰rdet ska alltid vara det fˆrsta v‰rdet, det som pÂ
- * sidan 265 i boken fˆrklaras vara "a wrong way".
+ * Detta √§r en av algoritmerna du ska implementera sj√§lv. Algoritmen ska vara
+ * quicksort, och pivotv√§rdet ska alltid vara det f√∂rsta v√§rdet, det som p√•
+ * sidan 265 i boken f√∂rklaras vara "a wrong way".
  * 
- * Fˆr information om quicksort generellt: se kursboken sidan 264 och framÂt.
- * T‰nk dock pÂ att implementationen i boken jobbar pÂ arrayer, men den h‰r
- * jobbar pÂ en lista av godtycklig typ och att den anv‰nder en annan
- * pivotvalsstrategi vilket kr‰ver att man skriver om den lite grann.
+ * F√∂r information om quicksort generellt: se kursboken sidan 264 och fram√•t.
+ * T√§nk dock p√• att implementationen i boken jobbar p√• arrayer, men den h√§r
+ * jobbar p√• en lista av godtycklig typ och att den anv√§nder en annan
+ * pivotvalsstrategi vilket kr√§ver att man skriver om den lite grann.
  */
 public class QuickSorterFirstElement<T extends Comparable<? super T>> extends
 		Sorter<T> {
 
+	private static final int CUTOFF = 10;
+//inte √§ndrad
+
+	private void insertionSort(List<T> l, int left, int right) {
+		int j;
+		for (int p = left + 1; p <= right; p++) {
+			T tmp = l.get(p);
+			for (j = p; j > left && tmp.compareTo(l.get(j - 1)) < 0; j--) {
+				l.set(j, l.get(j - 1));
+			}
+			l.set(j, tmp);
+		}
+	}
+/*
+	private void insertionSort(List<T> l, int left, int right) {
+		int j;
+        ListIterator<T> insertIter = l.listIterator(left+1);
+        //stega fram till startpunkt
+        //for(int i = 0 ; i < left + 1 ; i++){insertIter.next();}
+//yttre loop
+		for (int p = left + 1; p <= right; p++) {
+			T tmp = insertIter.next();
+            ListIterator<T> innerIter = insertIter;
+//inre loop
+            T innerTmp = innerIter.previous();
+			for (j = p; j > left && tmp.compareTo(innerTmp=innerIter.previous() ) < 0; j--) {
+				l.set(j, innerTmp);
+			}
+			l.set(j, tmp);
+		}
+	}
+*/
+	private void quicksort(List<T> l, int left, int right) {
+		if (left + CUTOFF <= right) {
+			T pivot = firstElement(l, left, right);
+
+			int i = left-1;
+			int j = right+1;
+            ListIterator<T> leftIter = l.listIterator(left);
+            ListIterator<T> rightIter = l.listIterator(right);
+			for (;;) {
+                do{i=leftIter.nextIndex();
+                }
+				while (leftIter.hasNext() && (leftIter.next().compareTo(pivot) < 0));
+                do{j=rightIter.previousIndex();
+                }
+				while (rightIter.hasPrevious() && (rightIter.previous().compareTo(pivot) > 0));
+				
+				if (i < j){
+					swap(l, i, j);
+                }
+				else
+					break;
+			}
+
+			swap(l, i, right); // restore pivot
+
+			quicksort(l, left, i - 1); // sort small elements
+			quicksort(l, i + 1, right); // sort large elements
+		} else {
+			insertionSort(l, left, right);
+		}
+	}
+	private T firstElement(List<T> l, int left, int right) {
+        T first = l.get(left);
+        swap(l, left, right);
+        return first;  
+    }
 	@Override
 	protected void doSort(List<T> l) {
-		// TODO Auto-generated method stub
-
+		quicksort(l, 0, l.size() - 1);
 	}
+    public static void main(String[] args){
+        List<Integer> a = new LinkedList<Integer>();
+        Random r = new Random();
+        for(int i = 0; i<10000; i++){
+            a.add(r.nextInt(10000));
+        }
+        QuickSorterFirstElement qs = new QuickSorterFirstElement();
+        qs.doSort(a);
+        System.out.println(a);
+    }
 
 }
