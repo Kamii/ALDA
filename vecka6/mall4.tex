@@ -1,0 +1,317 @@
+% Alla i gruppen ska lämna in individuellt i Moodle. 
+% Det ska dock vara samma fil för alla så att vi kan se vilka som har jobbat ihop.
+\documentclass[a4paper,10pt,oneside,onecolumn]{article}
+
+\usepackage[swedish]{babel}
+
+% Får ni problem med att pdf-filen ser suddig ut på skärmen så beror det på att ni inte har 
+% en fullständig fontuppsättning och att bitmappade fonter i fel skala används. Den bästa lösningen 
+% är att uppdatera fontuppsättningen, men man kan också plocka bort denna rad. Avstavning fungerar 
+% dock betydligt sämre då.
+\usepackage[T1]{fontenc}
+
+\usepackage[latin1]{inputenc}
+\usepackage{a4wide}
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{textcomp}
+\usepackage{color}
+\usepackage{hyperref}
+\hypersetup{linktocpage}
+\usepackage{xspace,graphicx}
+
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+
+\lstset{language=Java,
+basicstyle=\ttfamily,
+keywordstyle=\color{javapurple}\bfseries,
+stringstyle=\color{javared},
+commentstyle=\color{javagreen},
+morecomment=[s][\color{javadocblue}]{/**}{*/},
+numbers=left,
+numberstyle=\small\color{black},
+stepnumber=1,
+numbersep=10pt,
+tabsize=2,
+showspaces=false,
+showstringspaces=false,
+breaklines=true}
+
+% Glöm inte att uppdatera rubriken
+\title{ALDA VT12:Sortering}
+
+\author{Leon Hennings\\leonh \and Kamyar Sajjadi\\kamy-saj}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+
+\section{MergeSorter}
+\begin{lstlisting}
+public class MergeSorter<T extends Comparable<? super T>> extends Sorter<T> {
+
+  @Override
+  protected void doSort(List<T> list) 
+  {
+    mergeSort(list);
+  }
+
+  /**
+   * Internal method for having fun
+   * @param list an array of Comparable items.
+   */
+  @SuppressWarnings("unchecked")
+  private void mergeSort(List<T> list)
+  {
+    T[] tmpArray = (T[]) new Comparable[list.size()];
+
+    mergeSort(list, tmpArray, 0, list.size() - 1 );
+  }
+
+  /**
+   * Internal method that makes recursive calls.
+   * @param list an array of Comparable items.
+   * @param tmpArray an array to place the merged result.
+   * @param left the left-most index of the subarray.
+   * @param right the right-most index of the subarray.
+   */
+  private void mergeSort(List<T> list, T[] tmpArray, int left, int right )
+  {
+    if(left < right)
+    {
+      int center = ( left + right ) / 2;
+      mergeSort(list, tmpArray, left, center );
+      mergeSort(list, tmpArray, center + 1, right );
+      merge(list, tmpArray, left, center + 1, right );
+    }
+  }
+
+ /**
+  * Internal method that merges two sorted halves of a subarray.
+  * @param List an array of Comparable items.
+  * @param tmpArray an array to place the merged result.
+  * @param leftPos the left-most index of the subarray.
+  * @param rightPos the index of the start of the second half.
+  * @param rightEnd the right-most index of the subarray.
+  *
+  * Det vi har ändrat här är att metoderna tar List<T> som argument
+  * och så har vi ändrat så get() används istället för indexparanterser
+  */
+ private void merge(List<T> list, T[] tmpArray, int leftPos, int rightPos, int rightEnd )
+ {
+   int leftEnd = rightPos - 1;
+   int tmpPos = leftPos;
+   int numElements = rightEnd - leftPos + 1;
+
+   // Main loop
+   while(leftPos <= leftEnd && rightPos <= rightEnd)
+     if(list.get(leftPos).compareTo(list.get(rightPos)) <= 0)
+       tmpArray[tmpPos++] = list.get(leftPos++);
+     else
+       tmpArray[tmpPos++] = list.get(rightPos++);
+
+   while(leftPos <= leftEnd)    // Copy rest of first half
+     tmpArray[ tmpPos++ ] = list.get(leftPos++);
+
+   while( rightPos <= rightEnd )  // Copy rest of right half
+     tmpArray[ tmpPos++ ] = list.get(rightPos++);
+
+   // Copy tmpArray back
+   for( int i = 0; i < numElements; i++, rightEnd-- )
+     list.set(rightEnd, tmpArray[rightEnd]);
+ }
+}
+\end{lstlisting}
+\newpage
+
+\section{QuickSorterFirstElement}
+\begin{lstlisting}
+public class QuickSorterFirstElement<T extends Comparable<? super T>> extends Sorter<T> {
+
+  private static final int CUTOFF = 10;
+
+  private void insertionSort(List<T> l, int left, int right) {
+    int j;
+    for (int p = left + 1; p <= right; p++) {
+      T tmp = l.get(p);
+      for (j = p; j > left && tmp.compareTo(l.get(j - 1)) < 0; j--) {
+        l.set(j, l.get(j - 1));
+      }
+      l.set(j, tmp);
+    }
+  }
+
+  /**
+   * Internal method for the sorting. 
+   * @param list The list that we want to sort.
+   * @param left the left-most index of the subarray.
+   * @param right the right-most index of the subarray.
+   */
+  private void quicksort(List<T> l, int left, int right) {
+    if (left + CUTOFF <= right) {
+      T pivot = firstElement(l, left, right);
+
+      //Ändrat lite på index jämfört med 
+      //orginalkoden (QuickSorterMedianThree)
+      int i = left-1;
+      int j = right+1;
+
+      for (;;) {
+        while (l.get(++i).compareTo(pivot) < 0) {
+        }
+        while (l.get(--j).compareTo(pivot) > 0) {
+        }
+        if (i < j)
+          swap(l, i, j);
+        else
+          break;
+      }
+
+      swap(l, i, right); // restore pivot
+
+      quicksort(l, left, i-1); // sort small elements
+      quicksort(l, i, right); // sort large elements
+    } else 
+    {
+      insertionSort(l, left, right);                                                              
+    }
+  }
+
+  /**
+   *  Method to pick the pivot. 
+   *  returns the first element in List l from interval 
+   *  left to right and swaps it to the last place. 
+   *  @return T
+   */
+  private T firstElement(List<T> l, int left, int right) 
+  {
+    T first = l.get(left);
+    swap(l, left, right);
+    return first;  
+  }
+
+  @Override
+  protected void doSort(List<T> l) 
+  {
+    quicksort(l, 0, l.size() - 1);
+  }
+}                                                                     
+
+\end{lstlisting}
+\newpage
+
+\section{QuickSorterRandom}
+\begin{lstlisting}
+public class QuickSorterRandom<T extends Comparable<? super T>> extends Sorter<T> {
+                                                                                         
+  private static final int CUTOFF = 10;
+
+  private void insertionSort(List<T> l, int left, int right) {
+    int j;
+    for (int p = left + 1; p <= right; p++) {
+      T tmp = l.get(p);
+      for (j = p; j > left && tmp.compareTo(l.get(j - 1)) < 0; j--) {
+        l.set(j, l.get(j - 1));
+      }
+      l.set(j, tmp);
+    }
+  }
+
+  /**
+   * Internal method for the sorting. 
+   * @param list The list that we want to sort.
+   * @param left the left-most index of the subarray.
+   * @param right the right-most index of the subarray.
+   */
+  private void quicksort(List<T> l, int left, int right) 
+  {
+    if (left + CUTOFF <= right) {
+      T pivot = random(l, left, right);
+
+      int i = left-1;
+      int j = right+1;
+
+      for (;;) {
+        while (l.get(++i).compareTo(pivot) < 0) {
+        }
+        while (l.get(--j).compareTo(pivot) > 0) {
+        }
+        if (i < j)
+          swap(l, i, j);
+        else
+          break;
+      }
+
+      swap(l, i, right); // restore pivot
+
+      quicksort(l, left, i-1); // sort small elements
+      quicksort(l, i, right); // sort large elements
+    } else 
+    {
+      insertionSort(l, left, right);
+    }
+  }
+
+  /**
+   *  Method to pick the pivot. 
+   *  returns a random placed T from the List i the interval
+   *  left to right and swaps it to the last place. 
+   *  @return T
+   */
+  private T random(List<T> l, int left, int right) 
+  {
+    Random rnd = new Random();
+    int pivoNr = rnd.nextInt(right - left + 1)+left;
+    swap(l, pivoNr, right);
+    return l.get(right);
+  }
+
+  @Override
+  protected void doSort(List<T> l) 
+  {
+    quicksort(l, 0, l.size() - 1);
+  }
+}                                                          
+
+\end{lstlisting}
+\newpage
+
+\section{Analys av sorteringalgoritmer}
+
+
+\newpage
+\section{Poolfråga}
+\subsection{Fråga 1}
+Quicksort och mergesort är två vanliga sorteringsalgoritmer som båda har genomsnittliga tidskomplexiteten O(n log n). 
+Ge exempel på fall då den ena är att föredra över den andra. För högre betyg ska du även kunna säga varför med hänsyn 
+till hur de är implementerade.
+
+\subsection{Fråga 2}
+Vissa sorteringsalgoritmer innehåller ofta en implementation av en annan sorteringsalgoritm. Ge två exempel på sådana 
+sorteringsalgoritmer. För högre betyg ska du även förklara varför och i vilket skede av sorteringen som de andra sorteringsalgoritmerna 
+används och ge exempel på algoritmer som vanligen används i detta syfte.
+
+\subsection{Fråga 3}
+Ge ett exempel på ett fall då de enkla sorteringsalgoritmerna insertionsort och bubblesort är att föredra över quicksort, även för listor 
+av större storlek. För högre betyg ska du kunna visa på en liten lista med ca 10 element hur de skulle sorteras med de olika 
+sorteringsalgoritmerna samt hur stor skillnaden på antal operationer som görs blir.
+
+
+%\lstinputlisting[firstline=3, lastline=5]{SimpleLinkedList.java}
+
+% Nedanstående är bara för om ni vill använda bibtex för att hantera referenser. 
+
+%\bibliographystyle{plain}
+%\bibliography{bibtex}
+%\bibdata{bibtex}
+
+
+\end{document}
