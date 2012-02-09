@@ -1,4 +1,8 @@
-package alda.sort;
+/*
+ * v2 fix av kontrollen av sorteringen + ett problem med dubletter som gjorde att 
+ * det var f√§rre dubletter √§n v√§ntat i vissa situationer
+ * v1 orginalkoden
+ */
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -14,58 +18,63 @@ import java.util.Random;
 public class SortingAlgorithmsTester {
 
 	/**
-	 * Filen som resultaten ska skrivas pÂ.
+	 * Filen som resultaten ska skrivas p√•.
 	 */
 	private static final String REPORT_FILE_NAME = "results.txt";
 
 	/**
-	 * S‰tt denna till true fˆr mer information under kˆrning
+	 * S√§tt denna till true f√∂r mer information under k√∂rning
 	 */
 	private static final boolean PRINT_RESULTS_DURING_RUN = true;
 
 	/**
-	 * S‰tt denna till true fˆr att fÂ felmeddelande om nÂgon algoritm
-	 * misslyckas med en sortering. V‰ldigt nyttigt under utveckling, men
-	 * fungerar inte sÂ bra om nÂgon av algoritmerna inte ‰r implementerad ‰n.
+	 * S√§tt denna till true f√∂r att f√• felmeddelande om n√•gon algoritm
+	 * misslyckas med en sortering. V√§ldigt nyttigt under utveckling, men
+	 * fungerar inte s√• bra om n√•gon av algoritmerna inte √§r implementerad √§n.
 	 */
 	private static final boolean CHECK_SORTING = false;
 
 	/**
-	 * TvÂ omvandlingskonstanter som normalt kan ignoreras
+	 * Tv√• omvandlingskonstanter som normalt kan ignoreras
 	 */
 	private static final long NANO_SECONDS_PER_MILLI_SECOND = 1000 * 1000;
 	private static final long NANO_SECONDS_PER_SECOND = 1000 * NANO_SECONDS_PER_MILLI_SECOND;
 
 	/**
-	 * En testkonfigration avbryts n‰r ett test har tagit mer ‰n sÂ h‰r mycket
+	 * En testkonfigration avbryts n√§r ett test har tagit mer √§n s√• h√§r mycket
 	 * tid.
 	 * 
-	 * En sekund ‰r naturligtvis fˆr lite. ÷ka det till nÂgot l‰mpligt fˆr er.
+	 * En sekund √§r naturligtvis f√∂r lite. √ñka det till n√•got l√§mpligt f√∂r er.
 	 */
 	private static final double MAX_TIME_FOR_TEST_IN_SECONDS = 1.0;
 
 	/**
-	 * Vilka storlekar pÂ listorna som ska anv‰ndas. Kommentera bort eller ‰ndra
-	 * pÂ siffrorna om ni vill kontrollera vissa speciella storlekar.
+	 * Vilka storlekar p√• listorna som ska anv√§ndas. Kommentera bort eller √§ndra
+	 * p√• siffrorna om ni vill kontrollera vissa speciella storlekar.
 	 */
-	private static final int[] SIZES = { 100, 500, 1000, 2000, 4000, 10000,
-			20000, 50000, 100000, 500000, 1000000, 5000000
+	private static final int[] SIZES = { 100
 
-	// Min javakonfiguration fÂr slut pÂ minne h‰r.
-	// GÂr att st‰lla upp om man vill testa riktigt stora datam‰ngder
+	// Min javakonfiguration f√•r slut p√• minne h√§r.
+	// G√•r att st√§lla upp om man vill testa riktigt stora datam√§ngder
 	// ,10000000, 100000000
 	};
 
 	/**
-	 * Kommentera bort de sorteringsalgoritmer du inte vill kˆra
+	 * Kommentera bort de sorteringsalgoritmer du inte vill k√∂ra
 	 */
-	private static final Sorter[] SORTERS = { new QuickSorterMedianOfThree(),
-			new QuickSorterRandom(), new QuickSorterFirstElement(),
-			new MergeSorter(), new InsertionSorter(), new SelectionSorter(),
-			new BubbelSorter(), new JavaCollectionsSorter() };
+	private static final Sorter[] SORTERS = { 
+//		new QuickSorterMedianOfThree(),
+		new QuickSorterRandom(), 
+//		new QuickSorterFirstElement(),
+//		new MergeSorter(), 
+//		new InsertionSorter(), 
+//		new SelectionSorter(),
+//		new BubbelSorter(), 
+//		new JavaCollectionsSorter()
+		 };
 
 	// ////////////////////////////////////////////////////////////
-	// Koden nedanfˆr ska ni normalt sett inte behˆva bry er om. //
+	// Koden nedanf√∂r ska ni normalt sett inte beh√∂va bry er om. //
 	// ////////////////////////////////////////////////////////////
 
 	public static void main(String[] args) {
@@ -205,6 +214,7 @@ public class SortingAlgorithmsTester {
 					throw new IllegalStateException(
 							"List not sorted correctly by configuration "
 									+ this + " " + list);
+				c1 = c2;
 			}
 		}
 
