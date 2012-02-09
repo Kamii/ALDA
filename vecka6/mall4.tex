@@ -280,12 +280,52 @@ public class QuickSorterRandom<T extends Comparable<? super T>> extends Sorter<T
     quicksort(l, 0, l.size() - 1);
   }
 }                                                          
-
 \end{lstlisting}
 \newpage
 
 \section{Analys av sorteringalgoritmer}
+%Mergesort
+Mergesort är en sorteringsalgortim som rekursivt bryter upp det som ska sorteras till mindre listor och sedan sorteras de mindre listorna. 
+Därefter kommer dessa sättas samman och skapa en lista som är sorterad. 
+Innan vi börjat köra våra testfall så diskutera vi vad vi trodde skulle ta längst tid att sortera, en arraylist eller en linkedlist. 
+Vi kom ganska snabbt fram till att en länkadlista skulle ta längre tid att sortera än den förstnämnda. Enligt teorin är mergesort 
+en algoritm som ska ta O(N log N). 
+Tillskillnad från quicksort som är en in-place algoritm använder sig Mergesort av mer minne när den jobbar med komplexa datatyper. 
+Detta då den behöver skapa en extra datastruktur som tar upp mer plats i minnet. 
 
+%Quicksort med Random pivot
+Quicksort väljer ut ett element som blir vridpunkten (pivot) och placerar detta i slutet av listan, i det här fallet väljs element 
+slumpmässigt. Vridpunkten kan väljas ut på olika sätt. De olika sätt vi har implementerat valet av vridpunkten är med hjälp av en 
+randomgenerator som väljer ut ett index ur listan och sätter pivot till det element som ligger på det indexet. Den andra versionen 
+vi implementerat går ut på att vi väljer ut det första värdet som ligger i listan och använder det som vridpunkt. Sedan finns det 
+ytterligare ett sätt att välja privovärdet som går ut på att räkna fram medianen av det första, sista och det elementet i mitten. 
+I quicksort så söks listan igenom från vänster efter element som är större än vridpunkten och sedan från höger i jakt på element 
+som är mindre än vridpunkten. När två element som uppfyller detta hittats byter de plats.
+Detta fortsätter tills jämförelsepekaren som började från höger(j) är på ett lägre index än den som började från vänster(i), då 
+byts vridpunkten mot det element som i pekar på.
+Därefter kallas quicksort rekursivt på elementen till höger och de till vänster om vridpunkten.
+Det är vanligt att använda sig av en annan sorteringsalgoritm för små sublistor och i det här fallet används insertionsort. 
+Detta för att på mindre datamängder är simpla sorteringsalgoritmer mer effektiva. Detta fungerar som basecase för rekursionen. 
+
+%Insertionsort
+Insertionsort är en enkel sorteringsalgoritm. Oftast använder sig andra mer avancerade sorteringsalgoritmer sig av denna sortering som 
+basecase, tex som vi nämnde ovan quicksort. Algoritmen är relativt snabb att använda för att sortera små datastrukturer. Det absolut 
+bästa fallet för insertionsort är när det som ska sorteras redan är sorterat. Då kommer algoritmen ha en tidskomplexitet på O(N). 
+Även när listan är relativt sorterad så kommer insertionsort att utföras snabbt. 
+Själva implementationen består av en yttre loop som börjar på det andra elementet i listan och för varje iteration av den yttre 
+loopen jämförs det med alla tidigare element tills något större hittas varpå elementen byter plats. I värsta fall, t ex om hela 
+listan är sorterad i omvänd ordning, tar insertionsort O($N^{2}$) tid. 
+
+%Selectionsort
+Selectionsort är likt insertionsort en O($N^{2}$) sorteringsalgoritm. Selectionsort hittar det minsta värdet och byter plats med det värdet i 
+första indexet. Sedan så går den vidare till nästa index och hittar det näst största värdet och byter plats. Detta görs med hela listan tills 
+listan är helt sorterad. Implementationen som Henrik har bifogat ser ut på följande sätt. Den yttre loopen börjar på första elementet, på 
+index x, och kopierar det till ett temporärt element. 
+För varje varv söker den igenom hela resten av listan efter det minsta värdet och placerar det på platsen x varpå det temporära 
+elementet tar det minsta elementets tidigare plats.
+Sedan fortsätter yttre loopen på nästa plats i listan och inre loopen söker efter det näst lägsta värdet, och så vidare till listans slut nås. 
+Selectionsort är som insertionsort snabb på att sortera små listor. Det som skiljer sig är att selectionsort alltid är O($N^{2}$) 
+tillskillnad från insertionssort som i bästa fall är O(N).
 
 \newpage
 \section{Poolfråga}
