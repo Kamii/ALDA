@@ -83,23 +83,17 @@ public class QuickSorterRandom<T extends Comparable<? super T>> extends Sorter<T
 	@SuppressWarnings("unchecked")
 	public static void main (String[]args)
 	{
-		List<Integer> myList = new ArrayList<Integer>();
-
-		Random r = new Random();
-		int maxNoDuplicates = (myList.size() / 100); 
-		int count = 0;
-
-		for(int e = 0; e<21; e++)
-			myList.add(r.nextInt(20000));
-
-//		do {
-//			count++;
-//			copy(myList, r.nextInt(myList.size()), r.nextInt(myList.size()));
-//		} while (count < maxNoDuplicates);
-//		System.out.println(myList);
-
-		QuickSorterRandom rn = new QuickSorterRandom();
-		rn.doSort(myList);
+//		List<Integer> myList = new ArrayList<Integer>();
+//
+//		Random r = new Random();
+//		int maxNoDuplicates = (myList.size() / 100); 
+//		int count = 0;
+//
+//        for(int i = 0; i<10000; i++){
+//            myList.add(r.nextInt(10000));
+//        }
+//		QuickSorterRandom rn = new QuickSorterRandom();
+//		rn.doSort(myList);
 //		System.out.println(myList);
 	}
 }

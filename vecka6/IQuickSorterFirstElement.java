@@ -92,14 +92,14 @@ public class IQuickSorterFirstElement<T extends Comparable<? super T>> extends
 		quicksort(l, 0, l.size() - 1);
 	}
     public static void main(String[] args){
-        List<Integer> a = new LinkedList<Integer>();
-        Random r = new Random();
-        for(int i = 0; i<10000; i++){
-            a.add(r.nextInt(10000));
-        }
-        IQuickSorterFirstElement qs = new IQuickSorterFirstElement();
-        qs.doSort(a);
-        System.out.println(a);
+//        List<Integer> a = new LinkedList<Integer>();
+//        Random r = new Random();
+//        for(int i = 0; i<10000; i++){
+//            a.add(r.nextInt(10000));
+//        }
+//        IQuickSorterFirstElement qs = new IQuickSorterFirstElement();
+//        qs.doSort(a);
+//        System.out.println(a);
     }
 
 }
