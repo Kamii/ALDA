@@ -43,7 +43,7 @@ showstringspaces=false,
 breaklines=true}
 
 % Glöm inte att uppdatera rubriken
-\title{ALDA VT12:Sortering}
+\title{ALDA VT12: Sortering}
 
 \author{Leon Hennings\\leonh \and Kamyar Sajjadi\\kamy-saj}
 
@@ -284,6 +284,7 @@ public class QuickSorterRandom<T extends Comparable<? super T>> extends Sorter<T
 \newpage
 
 \section{Analys av sorteringalgoritmer}
+\subsection{Algoritmer}
 %Mergesort
 Mergesort är en sorteringsalgortim som rekursivt bryter upp det som ska sorteras till mindre listor och sedan sorteras de mindre listorna. 
 Därefter kommer dessa sättas samman och skapa en lista som är sorterad. 
@@ -326,6 +327,40 @@ elementet tar det minsta elementets tidigare plats.
 Sedan fortsätter yttre loopen på nästa plats i listan och inre loopen söker efter det näst lägsta värdet, och så vidare till listans slut nås. 
 Selectionsort är som insertionsort snabb på att sortera små listor. Det som skiljer sig är att selectionsort alltid är O($N^{2}$) 
 tillskillnad från insertionssort som i bästa fall är O(N).
+
+\subsection{Jämförelse}
+%Analysen
+För att kunna resonera kring hur mycket extra tid som går åt när vi sorterar länkade listor gjorde vi både quicksortRandom och quicksortFirstElement 
+med iteratorer och utan.
+Här ser vi tydligt att de med iteratorer inte helt oväntat är snabbare än de utan när sorteringen görs på en länkad lista. Det mesta av tiden går 
+alltså åt till att iterera över listan när man inte har en iterator. 
+Som exempel tog quicksortRandom med iterator 2,3 sekunder för att sortera en lista på 1000 element med många dubbletter av komplexa dataobjekt i 
+slumpad ordning. Samma sortering tog det 8,88 sekunder för quicksortRandom utan iterator att utföra.
+Att iterera över en länkad lista utan iterator innebär att man måste stega mellan objekten lika många gånger som platsen i listan man är ute 
+efter varje varv. Att enbart hämta det sista objektet i en (single)linked list har samma tidskomplexitet som att iterera över en arraylista av 
+samma storlek. Detta gör t ex att en genomsnittlig toString metod skulle ta O($N^{2}$) för att skriva ut alla element i listan.
+När det är en ArrayList som sorteras är iteratorn enbart negativ och de tar då istället längre tid.
+
+Mergesort tar lång tid när de komplexa datatyperna ska sorteras. Största skillnaden uppstod när listan var slumpmässigt fylld och oändrad. 
+Med 10000 element tog det då 2,26 sekunder att sortera heltalen och 10,08 sekunder att sortera komplexa datatyperna. 
+Quicksort lider inte lika mycket av detta då den gör sorteringen in-place. I våra testfall var quicksort snabbare än mergesort i nästan varenda fall.
+Eftersom de komplexa datatyperna är arrayer med heltal kommer de behöva jämföra alla platser för de fallen som de är dubbletter varje gång 
+det görs en compareTo. 
+Detta drabbar quicksort hårdare än mergesort eftersom den gör fler jämförelser, dock vägs det upp av att de större datafälten tar mer tid 
+att kopiera in i mergesorts temporära array.
+
+Enligt vår utdata från testfallen så fungerar quicksort bättre än mergesort när det är en slumpad lista med få dubbletter av heltalsobjekt 
+som ska sorteras. För 100000 element tog det 477 sekunder för mergesort och 316 sekunder för quicksort. 
+När listan var slumpad och det var få dubbletter gick det fortare att sortera med mergesort. Mergesort tog då 7,09 sekunder medans quicksort 
+tog 9,43 sekunder för 10000 element.
+
+När det gäller de enkla sorteringsalgoritmerna är Selectionsort snabbare än både insertionsort och bubblesort i de flesta fallen, utom när 
+listan redan är sorterad. 
+Insertionsort och bubblesort drar jämnt strå när det gäller sorterade listor då båda är O(N) i best case. När listan inte är sorterad är 
+bubblesort alltid långsammast.
+
+Jämförelser med sorteringsalgoritmen som finns implementerad för collections i Java visade sig vara lönlösa då den alltid gick mycket snabbare. 
+Endast quicksort med iterator kom i närheten men skillnaden var så stor så det inte gick att dra slutsatser om vilken sökalgoritm som användes.
 
 \newpage
 \section{Poolfråga}
