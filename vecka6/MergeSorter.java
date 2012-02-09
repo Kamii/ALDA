@@ -1,6 +1,4 @@
 // package alda.sort;
-
-//import java.util.List;
 import java.util.*;
 
 /**
@@ -19,9 +17,9 @@ public class MergeSorter<T extends Comparable<? super T>> extends Sorter<T> {
 
 	/**
 	 * Internal method for having fun
-	 * @param a an array of Comparable items.
+	 * @param list an array of Comparable items.
 	 */
-	@SuppressWarnings("unckecked")
+	@SuppressWarnings("unchecked")
 	private void mergeSort(List<T> list)
 	{
 		T[] tmpArray = (T[]) new Comparable[list.size()];
@@ -31,7 +29,7 @@ public class MergeSorter<T extends Comparable<? super T>> extends Sorter<T> {
 
 	/**
 	 * Internal method that makes recursive calls.
-	 * @param a an array of Comparable items.
+	 * @param list an array of Comparable items.
 	 * @param tmpArray an array to place the merged result.
 	 * @param left the left-most index of the subarray.
 	 * @param right the right-most index of the subarray.
@@ -49,11 +47,14 @@ public class MergeSorter<T extends Comparable<? super T>> extends Sorter<T> {
 
 	/**
 	 * Internal method that merges two sorted halves of a subarray.
-	 * @param a an array of Comparable items.
+	 * @param List an array of Comparable items.
 	 * @param tmpArray an array to place the merged result.
 	 * @param leftPos the left-most index of the subarray.
 	 * @param rightPos the index of the start of the second half.
 	 * @param rightEnd the right-most index of the subarray.
+	 *
+	 * Det vi har ändrat här är att metoderna tar List<T> som argument
+	 * och så har vi ändrat så get() används istället för indexparanterser
 	 */
 	private void merge(List<T> list, T[] tmpArray, int leftPos, int rightPos, int rightEnd )
 	{
@@ -77,26 +78,5 @@ public class MergeSorter<T extends Comparable<? super T>> extends Sorter<T> {
 		// Copy tmpArray back
 		for( int i = 0; i < numElements; i++, rightEnd-- )
 			list.set(rightEnd, tmpArray[rightEnd]);
-	}
-
-	public static void main (String[]args)
-	{
-		List<Integer> myList = new ArrayList<Integer>();
-
-		myList.add(5);
-		myList.add(3);
-		myList.add(7);
-		myList.add(6);
-		myList.add(6);
-		myList.add(43);
-		myList.add(56);
-		myList.add(32);
-		myList.add(11);
-		System.out.println(myList);
-
-		MergeSorter ms = new MergeSorter();
-		ms.doSort(myList);
-		System.out.println(myList);
-
 	}
 }

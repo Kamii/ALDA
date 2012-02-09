@@ -1,6 +1,3 @@
-// package alda.sort;
-
-// import java.util.List;
 import java.util.*;
 
 /**
@@ -28,6 +25,12 @@ public class QuickSorterRandom<T extends Comparable<? super T>> extends Sorter<T
 		}
 	}
 
+	/**
+	 * Internal method for the sorting. 
+	 * @param list The list that we want to sort.
+	 * @param left the left-most index of the subarray.
+	 * @param right the right-most index of the subarray.
+	 */
 	private void quicksort(List<T> l, int left, int right) {
 		if (left + CUTOFF <= right) {
 			T pivot = random(l, left, right);
@@ -47,9 +50,7 @@ public class QuickSorterRandom<T extends Comparable<? super T>> extends Sorter<T
 			}
 
 			swap(l, i, right); // restore pivot
-//			System.out.println(l);
 
-			// Vänstra och högra ska kollas
 			quicksort(l, left, i-1); // sort small elements
 			quicksort(l, i, right); // sort large elements
 		} else 
@@ -58,15 +59,17 @@ public class QuickSorterRandom<T extends Comparable<? super T>> extends Sorter<T
 		}
 	}
 
+	/**
+	 *	Method to pick the pivot. 
+	 *	returns a random placed T from the List i the interval 
+	 *	left to right and swaps it to the last place. 
+	 *	@return T
+	 */
 	private T random(List<T> l, int left, int right) 
 	{
 		Random rnd = new Random();
 		int pivoNr = rnd.nextInt(right - left + 1)+left;
-//		System.out.println("left: "+left+" right: "+right+" pivoNr: "+pivoNr);
-
-//		System.out.println(l);
 		swap(l, pivoNr, right);
-//		System.out.println(l);
 		return l.get(right);
 	}
 
@@ -74,26 +77,5 @@ public class QuickSorterRandom<T extends Comparable<? super T>> extends Sorter<T
 	protected void doSort(List<T> l) 
 	{
 		quicksort(l, 0, l.size() - 1);
-	}
-
-//	private static void copy(List l, int index1, int index2) {
-//		l.set(index1, l.get(index2));
-//	}
-
-	@SuppressWarnings("unchecked")
-	public static void main (String[]args)
-	{
-//		List<Integer> myList = new ArrayList<Integer>();
-//
-//		Random r = new Random();
-//		int maxNoDuplicates = (myList.size() / 100); 
-//		int count = 0;
-//
-//        for(int i = 0; i<10000; i++){
-//            myList.add(r.nextInt(10000));
-//        }
-//		QuickSorterRandom rn = new QuickSorterRandom();
-//		rn.doSort(myList);
-//		System.out.println(myList);
 	}
 }

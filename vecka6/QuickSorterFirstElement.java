@@ -1,7 +1,4 @@
-// package alda.sort;
-
-// import java.util.List;
-import java.util.*;
+import java.util.List;
 
 /**
  * Detta är en av algoritmerna du ska implementera själv. Algoritmen ska vara
@@ -28,10 +25,18 @@ public class QuickSorterFirstElement<T extends Comparable<? super T>> extends So
 		}
 	}
 
+	/**
+	 * Internal method for the sorting. 
+	 * @param list The list that we want to sort.
+	 * @param left the left-most index of the subarray.
+	 * @param right the right-most index of the subarray.
+	 */
 	private void quicksort(List<T> l, int left, int right) {
 		if (left + CUTOFF <= right) {
 			T pivot = firstElement(l, left, right);
 
+			//Ändrat lite på index jämfört med 
+			//orginalkoden (QuickSorterMedianThree)
 			int i = left-1;
 			int j = right+1;
 
@@ -47,9 +52,7 @@ public class QuickSorterFirstElement<T extends Comparable<? super T>> extends So
 			}
 
 			swap(l, i, right); // restore pivot
-//			System.out.println(l);
 
-			// Vänstra och högra ska kollas
 			quicksort(l, left, i-1); // sort small elements
 			quicksort(l, i, right); // sort large elements
 		} else 
@@ -58,35 +61,22 @@ public class QuickSorterFirstElement<T extends Comparable<? super T>> extends So
 		}
 	}
 
-	private T firstElement(List<T> l, int left, int right) {
-        T first = l.get(left);
-        swap(l, left, right);
-        return first;  
-    }
+	/**
+	 *	Method to pick the pivot. 
+	 *	returns the first element in List l from interval 
+	 *	left to right and swaps it to the last place. 
+	 *	@return T
+	 */
+	private T firstElement(List<T> l, int left, int right) 
+	{
+		T first = l.get(left);
+		swap(l, left, right);
+		return first;  
+	}
+
 	@Override
 	protected void doSort(List<T> l) 
 	{
 		quicksort(l, 0, l.size() - 1);
-	}
-
-//	private static void copy(List l, int index1, int index2) {
-//		l.set(index1, l.get(index2));
-//	}
-
-	@SuppressWarnings("unchecked")
-	public static void main (String[]args)
-	{
-//		List<Integer> myList = new ArrayList<Integer>();
-//
-//		Random r = new Random();
-//		int maxNoDuplicates = (myList.size() / 100); 
-//		int count = 0;
-//
-//        for(int i = 0; i<10000; i++){
-//            myList.add(r.nextInt(10000));
-//        }
-//		QuickSorterFirstElement rn = new QuickSorterFirstElement();
-//		rn.doSort(myList);
-//		System.out.println(myList);
 	}
 }
