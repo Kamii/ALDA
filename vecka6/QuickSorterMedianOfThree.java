@@ -1,15 +1,13 @@
-package alda.sort;
-
 import java.util.List;
 
 /**
- * Quicksort, mer eller mindre rakt av från boken. Pivotvärdet väljs med
+ * Quicksort, mer eller mindre rakt av frÃ¥n boken. PivotvÃ¤rdet vÃ¤ljs med
  * median-of-three.
  * 
- * För information om quicksort generellt: se kursboken sidan 264 och framåt.
- * Tänk dock på att implementationen i boken jobbar på arrayer, men den här
- * jobbar på en lista av godtycklig typ och att den använder en annan
- * pivotvalsstrategi vilket kräver att man skriver om den lite grann.
+ * FÃ¶r information om quicksort generellt: se kursboken sidan 264 och framÃ¥t.
+ * TÃ¤nk dock pÃ¥ att implementationen i boken jobbar pÃ¥ arrayer, men den hÃ¤r
+ * jobbar pÃ¥ en lista av godtycklig typ och att den anvÃ¤nder en annan
+ * pivotvalsstrategi vilket krÃ¤ver att man skriver om den lite grann.
  */
 public class QuickSorterMedianOfThree<T extends Comparable<? super T>> extends
 		Sorter<T> {

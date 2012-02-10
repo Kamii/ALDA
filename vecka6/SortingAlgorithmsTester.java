@@ -32,7 +32,7 @@ public class SortingAlgorithmsTester {
 	 * misslyckas med en sortering. Väldigt nyttigt under utveckling, men
 	 * fungerar inte så bra om någon av algoritmerna inte är implementerad än.
 	 */
-	private static final boolean CHECK_SORTING = false;
+	private static final boolean CHECK_SORTING = true;
 
 	/**
 	 * Två omvandlingskonstanter som normalt kan ignoreras
@@ -52,7 +52,7 @@ public class SortingAlgorithmsTester {
 	 * Vilka storlekar på listorna som ska användas. Kommentera bort eller ändra
 	 * på siffrorna om ni vill kontrollera vissa speciella storlekar.
 	 */
-	private static final int[] SIZES = { 100
+	private static final int[] SIZES = { 1000, 10000, 50000
 
 	// Min javakonfiguration får slut på minne här.
 	// Går att ställa upp om man vill testa riktigt stora datamängder
@@ -66,11 +66,12 @@ public class SortingAlgorithmsTester {
 //		new QuickSorterMedianOfThree(),
 		new QuickSorterRandom(), 
 //		new QuickSorterFirstElement(),
-//		new MergeSorter(), 
-//		new InsertionSorter(), 
+//		new IQuickSorterRandom(), 
+//		new IQuickSorterFirstElement(),
+		new MergeSorter(), 
+	new InsertionSorter(), 
 //		new SelectionSorter(),
-//		new BubbelSorter(), 
-//		new JavaCollectionsSorter()
+//		new BubbelSorter(), 		new JavaCollectionsSorter()
 		 };
 
 	// ////////////////////////////////////////////////////////////
@@ -112,12 +113,16 @@ public class SortingAlgorithmsTester {
 		for (TestConfiguration configuration : configurations) {
 			System.out.println(configuration);
 			for (int size : SIZES) {
+				try{
 				if (PRINT_RESULTS_DURING_RUN) {
 					System.out.print(size + "\t");
 					System.out.println(String.format("%f",
 							configuration.run(size)));
 				} else {
 					configuration.run(size);
+				}
+				} catch(StackOverflowError e)
+				{
 				}
 			}
 		}
@@ -273,7 +278,7 @@ public class SortingAlgorithmsTester {
 
 	private static abstract class Named {
 		public String toString() {
-			return getClass().getSimpleName() + "\t";
+			return "\t" +getClass().getSimpleName() + "\t";
 		}
 	}
 

@@ -1,15 +1,13 @@
-package alda.sort;
-
 import java.util.List;
 
 /**
- * Bubbelsort tas inte upp i boken men fungerar så att man går igenom listan
- * från början till slutet och jämför alla par av värden. Om två värden ligger i
- * fel ordning byter man plats på dem. Därefter upprepar man detta tills man
- * gått igenom hela listan en gång utan att behöva göra några byten.
+ * Bubbelsort tas inte upp i boken men fungerar sÃ¥ att man gÃ¥r igenom listan
+ * frÃ¥n bÃ¶rjan till slutet och jÃ¤mfÃ¶r alla par av vÃ¤rden. Om tvÃ¥ vÃ¤rden ligger i
+ * fel ordning byter man plats pÃ¥ dem. DÃ¤refter upprepar man detta tills man
+ * gÃ¥tt igenom hela listan en gÃ¥ng utan att behÃ¶va gÃ¶ra nÃ¥gra byten.
  * 
- * Hur skulle efektiviteten hos algoritmen förändras om man använde en iterator
- * för att gå igenom listan istället? Om man använde en ListIterator? Skulle det
+ * Hur skulle efektiviteten hos algoritmen fÃ¶rÃ¤ndras om man anvÃ¤nde en iterator
+ * fÃ¶r att gÃ¥ igenom listan istÃ¤llet? Om man anvÃ¤nde en ListIterator? Skulle det
  * fungera?
  */
 public class BubbelSorter<T extends Comparable<? super T>> extends Sorter<T> {

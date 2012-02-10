@@ -1,11 +1,10 @@
-package alda.sort;
 
 import java.util.Collections;
 import java.util.List;
 
 /**
- * Använder sig av sorteringsmetoden i Collections-klassen. Vilken algoritm är
- * det? Ändrar det sig beroende på datatyp? Varför det? I det här fallet?
+ * AnvÃ¤nder sig av sorteringsmetoden i Collections-klassen. Vilken algoritm Ã¤r
+ * det? Ã„ndrar det sig beroende pÃ¥ datatyp? VarfÃ¶r det? I det hÃ¤r fallet?
  */
 public class JavaCollectionsSorter<T extends Comparable<? super T>> extends
 		Sorter<T> {

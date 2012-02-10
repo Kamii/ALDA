@@ -1,10 +1,8 @@
-package alda.sort;
-
 import java.util.List;
 
 /**
- * Se kursboken sidan 248 och framåt. Tänk dock på att implementationen i boken
- * jobbar på arrayer, men den här jobbar på en lista av godtycklig typ.
+ * Se kursboken sidan 248 och framÃ¥t. TÃ¤nk dock pÃ¥ att implementationen i boken
+ * jobbar pÃ¥ arrayer, men den hÃ¤r jobbar pÃ¥ en lista av godtycklig typ.
  */
 public class InsertionSorter<T extends Comparable<? super T>> extends Sorter<T>  {
 

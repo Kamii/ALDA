@@ -1,5 +1,3 @@
-package alda.sort;
-
 import java.util.List;
 
 public abstract class Sorter<T extends Comparable<? super T>> {
