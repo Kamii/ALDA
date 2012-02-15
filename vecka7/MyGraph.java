@@ -1,18 +1,26 @@
-package alda;
-
+import java.util.*;
 /**
- * 
+ * Leon Hennings
+ * Kamyar Sajjadi
  */
 
-public class MyGraph implements MiniGraph<T extends Comparable<? super T>> {
-    private HashSet<T> nodes;
-    private ArrayList<Edge<T>> edges;
+public class MyGraph<T extends Comparable<? super T>> implements MiniGraph<T> {
+    private HashSet<T> nodes = new HashSet<T>(); 
+    private ArrayList<Edge<T>> edges= new ArrayList<Edge<T>>();
     
-    private class Edge<T>{
+    private static class Edge<T> implements Comparable<Edge>{
         private T node1;
         private T node2;
         private int weight;
-        public Edge<T>(T n1, T n2, int w){
+        public int compareTo(Edge other){
+            if(other.weight < weight)
+                return 1;
+            else if (other.weight < weight)
+                return -1;
+            else
+                return 0;
+        }
+        public Edge(T n1, T n2, int w){
             node1 = n1;    
             node2 = n2;    
             weight = w;
@@ -33,7 +41,7 @@ public class MyGraph implements MiniGraph<T extends Comparable<? super T>> {
 	 * nodes not already in the graph or nodes that still have edges associated
 	 * with them.
 	 */
-	public void removeNode(T n);
+	public void removeNode(T n){}
 	/**
 	 * Method for creating an unidirectional edge between two nodes. Does
 	 * nothing if the cost is negative, the edges are already connected, or if
@@ -46,10 +54,12 @@ public class MyGraph implements MiniGraph<T extends Comparable<? super T>> {
 	 *            The cost for traversing the edge
 	 */
 	public void connectNodes(T n1, T n2, int weight){
-        if(!weight<0)
+        if(!(weight<0))
             if(nodes.contains(n1) && nodes.contains(n2))
-                if(!edgeExistsBetween(n1, n2))
-                    edges.add(new Edge(n1, n2, weight));
+                if(!edgeExistsBetween(n1, n2)){
+                    Edge<T> e = new Edge<T>(n1, n2, weight);
+                    edges.add(e);
+                }
     }
 
 	/**
@@ -65,7 +75,7 @@ public class MyGraph implements MiniGraph<T extends Comparable<? super T>> {
 	 * @param n2
 	 *            The second node that identifies the edge.
 	 */
-	public void disconnectNodes(T n1, T n2);
+	public void disconnectNodes(T n1, T n2){}
 
 	/**
 	 * Method for searching the graph for a certain node. If the node is present
@@ -142,7 +152,7 @@ public class MyGraph implements MiniGraph<T extends Comparable<? super T>> {
 	 * @return Graph A new instance of the Graph class, representing a minimal
 	 *         spanning tree.
 	 */
-	public MiniGraph<T> generateMinimumSpanningTree(){
-
+	public MyGraph<T> generateMinimumSpanningTree(){
+        return new MyGraph<T>();
     }
 }

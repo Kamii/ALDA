@@ -1,11 +1,10 @@
-package alda;
 
 /**
  * An interface for a small, generic undirected weighted graph.
  * 
  * @author Erik Lundberg <elundbe@dsv.su.se>
- * @author Ann-SofiÅhn <ahn@dsv.su.se>
- * @author Henrik Bergström <henrikbe@dsv.su.se>
+ * @author Ann-SofiAhn <ahn@dsv.su.se>
+ * @author Henrik Bergstrom <henrikbe@dsv.su.se>
  */
 
 public interface MiniGraph<T extends Comparable<? super T>> {
