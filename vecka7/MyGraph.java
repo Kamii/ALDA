@@ -8,10 +8,19 @@ public class MyGraph<T extends Comparable<? super T>> implements MiniGraph<T> {
     private HashSet<T> nodes = new HashSet<T>(); 
     private ArrayList<Edge<T>> edges= new ArrayList<Edge<T>>();
     
-    private static class Edge<T> implements Comparable<Edge>{
+    private static class Edge<T> implements Comparable<Edge<T>>{
         private T node1;
         private T node2;
         private int weight;
+        public int getW(){
+            return weight;
+        }
+        public T getN1(){
+            return node1;
+        }
+        public T getN2(){
+            return node2;
+        }
         public int compareTo(Edge other){
             if(other.weight < weight)
                 return 1;
@@ -20,6 +29,7 @@ public class MyGraph<T extends Comparable<? super T>> implements MiniGraph<T> {
             else
                 return 0;
         }
+
         public Edge(T n1, T n2, int w){
             node1 = n1;    
             node2 = n2;    
@@ -153,6 +163,29 @@ public class MyGraph<T extends Comparable<? super T>> implements MiniGraph<T> {
 	 *         spanning tree.
 	 */
 	public MyGraph<T> generateMinimumSpanningTree(){
-        return new MyGraph<T>();
+        MyGraph<T> tree = new MyGraph<T>();
+        PriorityQueue<Edge> deck = new PriorityQueue<Edge>(edges);
+        
+            int i=0;
+        while(!deck.isEmpty()){
+            Edge<T> tmp = deck.poll();
+            i++;
+            System.out.println("n1:  " + tmp.getN1()+" n2: "+ tmp.getN2()+" w:  "+ tmp.getW());
+            System.out.println(edgeExistsBetween(tmp.getN1(), tmp.getN2()));
+            if(tree.nodes.contains(tmp.getN1()) && tree.nodes.contains(tmp.getN2()) && !tree.edgeExistsBetween(tmp.getN1(), tmp.getN2())){
+            
+                System.out.println(" Added 1");
+                tree.addNode(tmp.getN1());
+                tree.addNode(tmp.getN2());
+                tree.connectNodes(tmp.getN1(), tmp.getN2(), tmp.getW());
+            }
+            else if( !tree.nodes.contains(tmp.getN1()) || !tree.nodes.contains(tmp.getN2())){
+                System.out.println(" Added 2");
+                tree.addNode(tmp.getN1());
+                tree.addNode(tmp.getN2());
+                tree.connectNodes(tmp.getN1(), tmp.getN2(), tmp.getW());
+            }
+        }
+        return tree;
     }
 }
