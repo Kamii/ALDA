@@ -187,21 +187,25 @@ public class MyGraph<T extends Comparable<? super T>> implements MiniGraph<T>
 //			System.out.println("antal noder atm: "+tree.getNumberOfNodes());
 
 			Edge<T> tmp = deck.poll();
-			System.out.println("n1: "+tmp.getN1()+" n2: "+tmp.getN2()+" w: "+tmp.getW());
-//			System.out.println(tree.edgeExistsBetween(tmp.getN1(), tmp.getN2()));
-//			System.out.println(tree.getNumberOfEdges());
+			//System.out.println("n1: "+tmp.getN1()+" n2: "+tmp.getN2()+" w: "+tmp.getW());
 
-	//		System.out.println(tree.depthFirstSearch(tmp.getN1(), tmp.getN2()));
-
-			if(!tree.nodes.contains(tmp.getN1()) || !tree.nodes.contains(tmp.getN2()) && tree.depthFirstSearch(tmp.getN1(), tmp.getN2()))
+			if((!tree.nodes.contains(tmp.getN1()) || !tree.nodes.contains(tmp.getN2())) && !tree.depthFirstSearch(tmp.getN1(), tmp.getN2())) 
+            //!(tmp.getN1().equals(tmp.getN2()))
 			{
 				tree.addNode(tmp.getN1());
 				tree.addNode(tmp.getN2());
 				tree.connectNodes(tmp.getN1(), tmp.getN2(), tmp.getW());
-		//		System.out.println("---");
 			}
-		}
-//		System.out.println("_______________END_________________");
+			else if(tree.nodes.contains(tmp.getN1()) && tree.nodes.contains(tmp.getN2()) && !tree.depthFirstSearch(tmp.getN1(), tmp.getN2()))
+			{
+				tree.addNode(tmp.getN1());
+				tree.addNode(tmp.getN2());
+				tree.connectNodes(tmp.getN1(), tmp.getN2(), tmp.getW());
+		    }
+        }
+        for(Edge e : tree.edges){
+            System.out.println(e.node1+"- "+e.node2);
+        }
 		return tree;
 	}
 
