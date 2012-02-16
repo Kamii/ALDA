@@ -51,11 +51,32 @@ breaklines=true}
 
 \maketitle
 \tableofcontents
+\paragraph{}
+Koden finns att ladda ner på \url{http://people.dsv.su.se/~kamy-saj/download/ALDA/}
+
+Detta för att det ska bli lättare för er att göra en peer-review i er favorit editor. 
+
+\begin{center}
+Koden till zip-filen är: \textbf{rwa5uy3}
+\end{center}
+\newpage
 \newpage
 
+\section{Motivering till implemenetation}
+Vi valde att göra vår graf som en adjacency list då vi i detta fallet inte skulle ha så många bågar mellan noderna i grafen.
+Vi drog denna slutsats från testkoden och även från att det generellt inte finns så många kopplingar mellan noder i en genomsnittlig graf.
+Då Kruskals algoritm är mer beroende av antalet bågar än hur stort trädet är så är den mer lämplig för uppgiften. Den är O(E log E) där E är antalet bågar.
+Det är viktigt att alltid ta hänsyn till hur grafen kommer att användas. Hade vi haft många bågar mellan noderna i grafen hade det varit mer lönsamt 
+ddatt använda sig av prims algoritm.
+Eftersom vi skulle ha viktade bågar skapade vi en egen klass för dem. För att kruskals algoritm enkelt skulle kunna ta den lägst 
+viktade bågen gjorde vi dessa comparable så de kunde ordnas i en prioritetskö.
+För sammanslagningen av träd i algoritmen valde vi att använda depth-first search för att kontrollera så två noder inte befinner 
+sig i samma träd. Alternativet hade varit att göra de mindre träden till set och göra merge på dessa då noder i de olika träden ska 
+sammankopplas. Detta kräver flera datastrukturer för de olika träden. Då vi inte skulle hantera särskilt stora grafer kändes depth-first search fullt tillräckligt.
+Se kommentarer i koden för mer ingående beskrivning av algoritmen.
 
 \section{MyGraph}
-\subsection{privata variabler samt Edge klassen}
+\subsection{Privata variabler samt Edge klassen}
 \begin{lstlisting}
 public class MyGraph<T extends Comparable<? super T>> implements MiniGraph<T> 
 {
@@ -419,8 +440,6 @@ För högre betyg ska du även förklara vad som krävs för att båda varianterna ska 
 Givet en fullständig graf (alla noder har bågar till alla andra noder) vilket sätt är mest lönsamt att implementera 
 denna på och vilken algoritm är bäst lämpad för att bestämma det minimalt spännande trädet i grafen? 
 För högre betyg ska du motivera ditt val av implemenetation och algoritm på ett sätt som visar att du förstått dem båda.
-\subsection{Fråga 3}
-
 %\lstinputlisting[firstline=3, lastline=5]{SimpleLinkedList.java}
 
 % Nedanstående är bara för om ni vill använda bibtex för att hantera referenser. 
