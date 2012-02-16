@@ -1,0 +1,116 @@
+% Alla i gruppen ska lämna in individuellt i Moodle. 
+% Det ska dock vara samma fil för alla så att vi kan se vilka som har jobbat ihop.
+\documentclass[a4paper,10pt,oneside,onecolumn]{article}
+
+\usepackage[swedish]{babel}
+
+% Får ni problem med att pdf-filen ser suddig ut på skärmen så beror det på att ni inte har 
+% en fullständig fontuppsättning och att bitmappade fonter i fel skala används. Den bästa lösningen 
+% är att uppdatera fontuppsättningen, men man kan också plocka bort denna rad. Avstavning fungerar 
+% dock betydligt sämre då.
+\usepackage[T1]{fontenc}
+
+\usepackage[latin1]{inputenc}
+\usepackage{a4wide}
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{textcomp}
+\usepackage{color}
+\usepackage{hyperref}
+\hypersetup{linktocpage}
+\usepackage{xspace,graphicx}
+
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+
+\lstset{language=Java,
+basicstyle=\ttfamily,
+keywordstyle=\color{javapurple}\bfseries,
+stringstyle=\color{javared},
+commentstyle=\color{javagreen},
+morecomment=[s][\color{javadocblue}]{/**}{*/},
+numbers=left,
+numberstyle=\small\color{black},
+stepnumber=1,
+numbersep=10pt,
+tabsize=2,
+showspaces=false,
+showstringspaces=false,
+breaklines=true}
+
+% Glöm inte att uppdatera rubriken
+\title{ALDA VT12: Sortering}
+
+\author{Leon Hennings\\leonh \and Kamyar Sajjadi\\kamy-saj}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+
+\section{MyGraph}
+\begin{lstlisting}
+
+\end{lstlisting}
+\newpage
+
+\section{Grafalgoritmer}
+\subsection{Multigrafer}
+\subsubsection{Prims algoritm}
+Algoritmen fungerar för multigrafer utan modifikationer så länge de är oriktade. För riktade grafer är det irrelevant då ett riktat träd inte kan vara spanning.
+Anledningen till att det fungerar även för multigrafer är att bågarnas vikt alltid jämförs och det minsta kommer väljas oavsett om det finns flera bågar mellan ett par noder.
+\subsubsection{Kruskals algoritm}
+Då Kruskals algoritm endast tar de kortaste bågarna för alla noder som inte redan är ihopkopplade kommer det inte spela någon roll ifall grafen är en multigraf. 
+\subsubsection{Dijkstras algoritm}
+Denna algoritm kommer att fungera på multigrafer. Dijkstras kommer alltid att hitta den kortaste vägen från X till Y även om det finns fler bågar ut från en nod till en annan. Det man eventuellt ska ta hänsyn till när dijkstras används på multigrafer är att hålla reda på vilken av bågarna som var den kortaste vägen. Så om det finns två bågar ut från A till B så måste vi ta hänsyn till vilken av dessa två bågar som har den lägsta vikten och spara denna i tabellen. Sedan bör de bågar returneras som leder till slutnoden istället som i vanliga fall då noderna som bildar den kortaste vägen returneras.
+\subsubsection{Djupet först sökning}
+Djupet först-sökning fungerar för multigrafer. Den kommer se om det finns en koppling mellan X och Y. Man kan tro att samma nod kommer besökas fler gånger om det finns fler bågar ut till samma nod, men eftersom algoritmen markerar noderna när den har besökt dem så kommer vi inte behöva gå till samma nod fler gånger. 
+\subsubsection{Bredden först sökning}
+På samma sätt som djupet först sökning kommer bredden först sökning fungera för multigrafer. Eftersom vilka noder som besökts och deras lägsta vikt sparas undan kommer de fallen där noder har flera bågar inte spela någon roll mer än ur effektivitets perspektiv.
+\subsubsection{Topologisk sortering}
+Kommer ej att fungera på grafen om den inte är riktad. Om multigrafen är riktad så kommer denna algoritm att fungera. Algoritmen kollar på den nod som är minimal, dvs den nod som ej har några bågar inåt. Algoritmen tar ej hänsyn till hur många bågar som går utåt från den minimala noden. Därav kommer topologisk sortering att fungera på multigrafer.
+\newpage
+\subsection{Negativ vikt}
+\subsubsection{Prims algoritm}
+För grafer med negativa vikter fungerar denna algoritm. Det påverkar inte algoritmen att bågarna har negativa vikter. Algoritmen kommer ta den minsta bågen till nästa nod, men endast om den ej har besökt den noden. Detta gör att det ej spelar någon roll om det är ett negativt tal eller positivt, så länge det är det minsta talet av alla de som finns att välja på. Tabellen som byggs upp i algoritmen består av de lägsta noderna som sammansätter grafen till ett träd, det vill säga att det inte påverkar om det är negativa tal. 
+
+\subsubsection{Kruskals algoritm}
+Även denna algoritm fungerar med negativt viktade grafer. Kruskals algoritm bygger trädet med hjälp av de bågar som har lägst värde. Detta innebär att det inte spelar någon roll om bågarna har negativa värden, så länge det är de bågar med lägst vikt som används för att bygga trädet. 
+\subsubsection{Dijkstras algoritm}
+Dijkstras algoritm kommer ej att fungera på denna sortens grafer. Algoritmen går ut på att man räknar kostnaden hittills från nod A till B.
+Det innebär att man, ifall grafen är riktad, kan gå tillbaka till en redan besökt nod och på så vis använda den negativa vikten för att minska totalvikten ett oändligt antal gånger för att försöka få fram den kortaste vägen.
+En lösning för detta problem skulle vara att alltid se till så att samtliga bågar i grafen blir positiva. Detta genom att addera lägsta vikten med ett tills den blir positiv och sedan addera lika mycket till de andra vikterna, så att alla blir positiva men differensen är bevarad sinsemellan. Det viktiga här är att bågarnas vikt i förhållande till varandra ej ändras. 
+\subsubsection{Djupet först sökning}
+Djupet först-sökning tar inte hänsyn till bågarnas vikt i sin sökning.
+Negativ vikt har därför ingen verkan på dess funktionalitet.
+\subsubsection{Bredden först sökning}
+Den följer alla bågar tills rätt nod hittas utan hänsyn till bågarnas vikt och fungerar därför för negativa vikter av samma anledning som djupet-först-sökning.
+\subsubsection{Topologisk sortering}
+Eftersom topologisk sortering endast tar hänsyn till antalet utgående bågar från en nod kommer negativa vikter inte påverka den.
+
+\newpage
+\section{Poolfrågor}
+2. Frågan måste behandla hur grafer kan implementeras.
+\subsection{Fråga 1}
+Förklara skillnaden på adjacency list och adjacency matrix, ge exempel på när de är att föredra.
+För högre betyg ska du även förklara vad som krävs för att båda varianterna ska kunna hantera viktade kanter.
+\subsection{Fråga 2}
+
+\subsection{Fråga 3}
+
+%\lstinputlisting[firstline=3, lastline=5]{SimpleLinkedList.java}
+
+% Nedanstående är bara för om ni vill använda bibtex för att hantera referenser. 
+
+%\bibliographystyle{plain}
+%\bibliography{bibtex}
+%\bibdata{bibtex}
+
+
+\end{document}
