@@ -201,7 +201,7 @@ public class MyGraph<T extends Comparable<? super T>> implements MiniGraph<T>
 		// bågarna sorterade efter minst först
 		PriorityQueue<Edge> deck = new PriorityQueue<Edge>(edges);
 
-		while(!deck.isEmpty())
+		while((getNumberOfNodes()-1) > tree.getNumberOfEdges())
 		{
 			Edge<T> tmp = deck.poll();
 
