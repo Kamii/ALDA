@@ -1,0 +1,88 @@
+% Alla i gruppen ska lämna in individuellt i Moodle. 
+% Det ska dock vara samma fil för alla så att vi kan se vilka som har jobbat ihop.
+\documentclass[a4paper,10pt,oneside,onecolumn]{article}
+
+\usepackage[swedish]{babel}
+
+% Får ni problem med att pdf-filen ser suddig ut på skärmen så beror det på att ni inte har 
+% en fullständig fontuppsättning och att bitmappade fonter i fel skala används. Den bästa lösningen 
+% är att uppdatera fontuppsättningen, men man kan också plocka bort denna rad. Avstavning fungerar 
+% dock betydligt sämre då.
+\usepackage[T1]{fontenc}
+
+\usepackage[latin1]{inputenc}
+\usepackage{a4wide}
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{textcomp}
+\usepackage{color}
+\usepackage{hyperref}
+\hypersetup{linktocpage}
+\usepackage{xspace,graphicx}
+
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+
+\lstset{language=Java,
+basicstyle=\ttfamily,
+keywordstyle=\color{javapurple}\bfseries,
+stringstyle=\color{javared},
+commentstyle=\color{javagreen},
+morecomment=[s][\color{javadocblue}]{/**}{*/},
+numbers=left,
+numberstyle=\small\color{black},
+stepnumber=1,
+numbersep=10pt,
+tabsize=2,
+showspaces=false,
+showstringspaces=false,
+breaklines=true}
+
+% Glöm inte att uppdatera rubriken
+\title{ALDA VT12: Grafer}
+
+\author{Leon Hennings\\leonh \and Kamyar Sajjadi\\kamy-saj}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\paragraph{}
+Koden finns att ladda ner på \url{http://people.dsv.su.se/~kamy-saj/download/ALDA/}
+
+Detta för att det ska bli lättare för er att göra en peer-review i er favorit editor. 
+
+\begin{center}
+Koden till zip-filen är: \textbf{rwa5uy3}
+\end{center}
+\newpage
+\newpage
+
+\section{}
+
+\section{kod}
+\subsection{Privata variabler samt Edge klassen}
+\begin{lstlisting}
+
+\end{lstlisting}
+\newpage
+
+
+\section{Poolfrågor}
+
+\subsection{Fråga 1}
+\subsection{Fråga 2}
+%\lstinputlisting[firstline=3, lastline=5]{SimpleLinkedList.java}
+
+% Nedanstående är bara för om ni vill använda bibtex för att hantera referenser. 
+
+%\bibliographystyle{plain}
+%\bibliography{bibtex}
+%\bibdata{bibtex}
+
+
+\end{document}
