@@ -24,6 +24,9 @@ public class ClosestPair{
             else
                 return false;
         }
+        public String toString(){
+            return "(" + x +","+y+")";
+        }
     }
     public void addPoint(Point p){
         plane.add(p);
@@ -83,7 +86,7 @@ public class ClosestPair{
             int rightBound=middle+1; 
 
 //ALT 1
-            while(plane.get(leftBound).getX()<middleX+smallest && leftBound<intervalStart){
+            while(plane.get(leftBound).getX()>middleX-smallest && leftBound>intervalStart){
                 leftBound--;
                 System.out.println("left: "+leftBound);
             }
@@ -105,15 +108,29 @@ public class ClosestPair{
             *
             */
             double both=Double.MAX_VALUE;
+            
+            System.out.println("MERGE: ");
             for(int i=leftBound ; plane.get(i).getX()<=middleX ;i++){
                 Point tmp = plane.get(i);
+                System.out.print("i: "+i );
+                System.out.print(plane.get(i)+" " );
                 for(int j = rightBound; plane.get(j).getX()>middleX; j--){
-                    if(Math.abs(tmp.getX()-plane.get(j).getX())>smallest 
-                        || Math.abs(tmp.getY()-plane.get(j).getY())>smallest)
+                    System.out.print("j: "+j );
+                    System.out.print(plane.get(j) );
+                    
+                    if(Math.abs(tmp.getX()-plane.get(j).getX())>smallest )
+                       // || Math.abs(tmp.getY()-plane.get(j).getY())>smallest)
+                        {
+                        System.out.println("break ");
                         break;
+                    }
                     double newDelta=getDistance(tmp, plane.get(j));
-                    if(newDelta<both)
+                        System.out.print("no break ");
+                    if(newDelta<both){
                         both=newDelta;
+                        System.out.print("new delta ");
+                    }
+                    System.out.println("\n--end");
                 }
             }
 
@@ -127,13 +144,23 @@ public class ClosestPair{
     public double findClosestInInterval(int intervalStart, int intervalEnd){
         double delta=Double.MAX_VALUE;
         for(int i=intervalStart; i<intervalEnd+1; i++){
+            System.out.print("i: "+i );
+            System.out.print(plane.get(i)+" " );
             Point tmp = plane.get(i);
             for(int j = i+1; j<intervalEnd+1; j++ ){
-                if(Math.abs(tmp.getX()-plane.get(j).getX())>delta)
+                System.out.print("j: "+j );
+                System.out.print(plane.get(j) );
+                if(Math.abs(tmp.getX()-plane.get(j).getX())>delta){
+                    System.out.println("break ");
                     break;
+                }
                 double newDelta=getDistance(tmp, plane.get(j));
-                if(newDelta<delta)
+                System.out.print("no break ");
+                if(newDelta<delta){
                     delta=newDelta;
+                    System.out.print("new delta ");
+                }
+                System.out.println("\n--end");
             }
         }
         return delta;
@@ -146,15 +173,15 @@ public class ClosestPair{
         cp.addPoint(new Point(15,700));
         cp.addPoint(new Point(55,2000));
         cp.addPoint(new Point(42,9000));
-        System.out.println(cp.toString());        
+        //System.out.println(cp.toString());        
         double fcp = cp.findClosestPair();
+        System.out.println("SVAR: "+fcp);
+        System.out.println("\n----------");
 
-        System.out.println(cp.toString());        
-        System.out.println("----------");
-        System.out.println(fcp);
-        System.out.println("----------");
+        //System.out.println(cp.toString());        
         double fcii = cp.findClosestInInterval(0,cp.getPlaneSize()-1);
-        System.out.println(fcii);
+        System.out.println("\n----------");
+        System.out.println("kontroll : "+fcii);
 
         //Testfall: (1,10) (100,10) (90,300), (15,700) , (55,2000), (42,9000)
     }
