@@ -1,0 +1,256 @@
+import java.util.*;
+import java.awt.Point;
+public class ClosestPair{
+    /**
+    *ArrayListen som innehåller koordinaterna
+    */
+    private ArrayList<Point> plane = new ArrayList<Point>();
+    private ArrayList<Point> Yplane; 
+
+    /**
+    *Comparator i X-led
+    */
+    private class CmpX implements Comparator<Point>{
+        public int compare(Point p1, Point p2){
+            if (p1.x == p2.x)
+                return p1.y-p2.y;
+            else
+                return p1.x-p2.x;
+        }
+        public boolean equals(Point p1, Point p2){
+            return p1.x==p2.x;
+        }
+    }
+    /**
+    *Comparator i Y-led
+    */
+    private class CmpY implements Comparator<Point>{
+        public int compare(Point p1, Point p2){
+            if (p1.y == p2.y)
+                return p1.x-p2.x;
+            else
+                return p1.y-p2.y;
+        }
+        public boolean equals(Point p1, Point p2){
+            return p1.y == p2.y;
+        }
+    }
+    public void addPoint(Point p){
+        plane.add(p);
+    }
+    public String toString(){
+        String str= "";
+        for(Point p : plane){
+            str+= "X: " + p.getX() + " Y: " + p.getY()+ "\n";
+        }
+        return str;
+    }
+    public int getPlaneSize(){
+        return plane.size();
+    }
+
+    /**
+     *Räknar ut avståndet mellan två punkter
+     */
+    private double getDistance(Point p1, Point p2){
+        if(p1.equals(p2))
+            return 0.0;
+        return Math.sqrt( Math.pow((p1.getX()-p2.getX()), 2.0) + Math.pow((p1.getY()-p2.getY()), 2.0) );
+    }
+    /**
+     *Initeringsmetodför findClosestPair
+     */
+    public double findClosestPair(){
+        Yplane = new ArrayList<Point>(plane);
+        Collections.sort(plane, new CmpX());
+        Collections.sort(Yplane, new CmpY());
+        return findClosestPair(0, plane.size()-1);
+    }
+
+    /**
+     *Huvudmetod
+     *Huvudmetod
+     *Huvudmetod
+     */
+    private double findClosestPair(int intervalStart, int intervalEnd){
+        /**
+         *Basecase: det är två eller tre koordinater i intervallet
+         */
+        if(intervalEnd-intervalStart<=2){ 
+            return findClosestInInterval(intervalStart, intervalEnd);
+        } 
+        else{
+            //+1 för att middle ska bli första elementet i högerdelen för både jämn och ojämn storlek på array
+            int middle = ((intervalStart+intervalEnd)/2);
+            //double middleX = (plane.get(intervalStart).getX()+plane.get(intervalEnd).getX())/2;
+            double middleX = (plane.get(middle).getX()+plane.get(middle+1).getX())/2;
+         //   ///////////////////////
+         //   double closest = Double.MAX_VALUE;
+         //   Point tmp = null;
+         //   int midPoint;
+         //   for(int mid = intervalStart; mid<intervalEnd ; mid++){
+         //       tmp = plane.get(mid); 
+         //       double candidate =Math.abs(middleX-tmp.getX());
+         //       if(candidate<closest){
+         //           closest=candidate;
+         //           midPoint=mid;
+         //       }
+         //   }
+            //////////////////////////////
+            //recurse left
+            double left = findClosestPair(intervalStart, middle);
+            //recurse right
+            double right = findClosestPair(middle+1, intervalEnd); 
+            //smallest of the two
+            double smallest = right;
+            if(left<smallest)
+                smallest = left;
+            int leftBound=middle; 
+            int rightBound=middle+1; 
+
+            if(plane.get(leftBound).getX()>middleX-smallest 
+                    || plane.get(rightBound).getX()<middleX+smallest){
+                //Hitta mitt-rännan
+                while(leftBound>intervalStart && plane.get(leftBound).getX()>middleX-smallest){
+                    leftBound--;
+            //                System.out.println("left: "+leftBound);
+                }
+                while(rightBound<intervalEnd && plane.get(rightBound).getX()<middleX+smallest){
+                    rightBound++;
+            //        System.out.println("right: "+rightBound);
+                }
+
+                /**
+                 *Skapa listor för prickarna som ligger mindre än smallest ifrån middleX
+                 */
+/**
+*BÅDA I SAMMA
+*/
+                ArrayList<Point> bothList = new ArrayList<Point>();
+                for(int i=leftBound ; plane.get(i).getX()<=middleX; i++){
+                    bothList.add(plane.get(i));
+                } 
+                Collections.sort(bothList, new CmpY());
+
+                double newDeltaN=Double.MAX_VALUE;
+                double bothN=Double.MAX_VALUE;
+                for(int i = 0;i<bothList.size(); i++){
+                    for(int j = i+1;j<bothList.size()-1; j++){
+                        if(Math.abs(bothList.get(i).getY()-bothList.get(j).getY())>smallest){
+                            break;
+                        }
+                        newDeltaN=getDistance(bothList.get(i),bothList.get(j));
+                        if(newDeltaN<bothN)
+                            bothN=newDeltaN;
+                    }
+                }
+                
+/**
+*BÅDA I OLIKA 
+*/
+                ArrayList<Point> leftList = new ArrayList<Point>();
+                ArrayList<Point> rightList = new ArrayList<Point>();
+                for(int i=leftBound ; plane.get(i).getX()<=middleX; i++){
+                    leftList.add(plane.get(i));
+                } 
+                Collections.sort(leftList, new CmpY());
+                for(int i=rightBound ;  plane.get(i).getX()>middleX; i--){
+                    rightList.add(plane.get(i));
+                } 
+                Collections.sort(rightList, new CmpY());
+
+                System.out.println(leftList);
+                System.out.println(rightList);
+
+          /**
+          *Jämför de till vänster med de till höger
+          */
+                double both=Double.MAX_VALUE;
+                double newDelta=Double.MAX_VALUE;
+
+                for(Point p : leftList){
+                    for(Point q : rightList){
+                        if(Math.abs(p.y-q.y)>smallest){
+                            break;
+                        }
+                        newDelta=getDistance(p,q);
+                        if(newDelta<both)
+                            both=newDelta;
+                    }
+                }
+                if(bothN<both){
+                    System.out.println("DING DING DING");
+                    both = bothN;
+                }
+                if(both<smallest){
+                    System.out.println(both);
+                    return both;
+                }
+                else{
+                    System.out.println(smallest);
+                    return smallest;
+                }
+            }
+            else
+                return smallest;
+        }
+    }
+    /**
+    *Brute force algoritm för basecase och testning av algoritmen
+    */
+    public double findClosestInInterval(int intervalStart, int intervalEnd){
+        double delta=Double.MAX_VALUE;
+        double newDelta=Double.MAX_VALUE;
+
+        for(int i=intervalStart; i<intervalEnd+1; i++){
+            Point tmp = plane.get(i);
+            for(int j = i+1; j<intervalEnd+1; j++ ){
+                newDelta=getDistance(tmp, plane.get(j));
+                if(newDelta<delta){
+                    delta=newDelta;
+                }
+            }
+        }
+        return delta;
+    }
+    public static void main(String[] args){
+        ClosestPair cp = new ClosestPair();
+//        cp.addPoint(new Point(1,10));
+//        cp.addPoint(new Point(100,10));
+//        cp.addPoint(new Point(90,300));
+//        cp.addPoint(new Point(15,700));
+//        cp.addPoint(new Point(55,2000));
+//        cp.addPoint(new Point(42,9000));
+Random r = new Random();
+for(int i =0 ; i<100 ; i++)
+{
+    cp.addPoint(new Point(r.nextInt(),r.nextInt()));
+}
+//        cp.addPoint(new Point(12,40));
+//        cp.addPoint(new Point(1,4));
+//        cp.addPoint(new Point(52,7));
+//        cp.addPoint(new Point(245,6754));
+//        cp.addPoint(new Point(12245,25));
+//        cp.addPoint(new Point(114,432));
+//        cp.addPoint(new Point(746,2));
+//        cp.addPoint(new Point(452,54));
+//        cp.addPoint(new Point(1325,625));
+//        cp.addPoint(new Point(7876,96));
+//        cp.addPoint(new Point(12,22));
+//        cp.addPoint(new Point(245,765));
+//        cp.addPoint(new Point(13,657));
+//        cp.addPoint(new Point(345,63)); 
+        //System.out.println(cp.toString());        
+        double fore = cp.findClosestInInterval(0,cp.getPlaneSize()-1);
+        double fcp = cp.findClosestPair();
+        double efter = cp.findClosestInInterval(0,cp.getPlaneSize()-1);
+//        System.out.println(cp.toString());        
+        System.out.println("----------");
+        System.out.println("SVAR: "+fcp);
+        System.out.println("före : "+fore);
+        System.out.println("efter : "+efter);
+
+        //Testfall: (1,10) (100,10) (90,300), (15,700) , (55,2000), (42,9000)
+    }
+}
+
