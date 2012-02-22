@@ -1,31 +1,31 @@
 import java.util.*;
+import java.awt.Point;
 public class ClosestPair{
+    /**
+    *ArrayListen som innehåller koordinaterna
+    */
     private ArrayList<Point> plane = new ArrayList<Point>();
 
-    private static class Point implements Comparable<Point>{
-        private int x;
-        private int y;
-        public Point(int x, int y){
-            this.x = x;
-            this.y = y;
+    /**
+    *Comparator i X-led
+    */
+    private class CmpX implements Comparator<Point>{
+        public int compare(Point p1, Point p2){
+            return p1.x-p2.x;
         }
-        public int getX(){
-            return x;
+        public boolean equals(Point p1, Point p2){
+            return p1.x==p2.x;
         }
-        public int getY(){
-            return y;
+    }
+    /**
+    *Comparator i Y-led
+    */
+    private class CmpY implements Comparator<Point>{
+        public int compare(Point p1, Point p2){
+            return p1.y-p2.y;
         }
-        public int compareTo(Point p){
-            return x - p.getX();
-        }
-        public boolean equals(Point other){
-            if(x==other.getX() && y==other.getY())
-                return true;
-            else
-                return false;
-        }
-        public String toString(){
-            return "(" + x +","+y+")";
+        public boolean equals(Point p1, Point p2){
+            return p1.y == p2.y;
         }
     }
     public void addPoint(Point p){
@@ -54,8 +54,7 @@ public class ClosestPair{
      *Initeringsmetodför findClosestPair
      */
     public double findClosestPair(){
-        Collections.sort(plane);
-        //return findClosestPair(plane.get(0).getX(), plane.get(plane.size()-1).getX());
+        Collections.sort(plane, new CmpX());
         return findClosestPair(0, plane.size()-1);
     }
 
@@ -71,21 +70,19 @@ public class ClosestPair{
         } 
         else{
             System.out.println(intervalStart +" " +intervalEnd);
-            //+1 för att middle ska bli första elementet i högerdelen för både jämn och ojämn storlek på array
+        //+1 för att middle ska bli första elementet i högerdelen för både jämn och ojämn storlek på array
             int middle = ((intervalStart+intervalEnd)/2);
-            int middleX = (plane.get(intervalStart).getX()+plane.get(intervalEnd).getX())/2;
-            //recurse left
+            double middleX = (plane.get(intervalStart).getX()+plane.get(intervalEnd).getX())/2;
+        //recurse left
             double left = findClosestPair(intervalStart, middle);
-            //recurse right
+        //recurse right
             double right = findClosestPair(middle+1, intervalEnd); 
-            //smallest of the two
+        //smallest of the two
             double smallest = (left < right ? left : right);
-            int offset = (int)Math.ceil(smallest);
-            System.out.println("offset: "+offset);
             int leftBound=middle; 
             int rightBound=middle+1; 
 
-//ALT 1
+//Hitta mittrännan
             while(plane.get(leftBound).getX()>middleX-smallest && leftBound>intervalStart){
                 leftBound--;
                 System.out.println("left: "+leftBound);
@@ -94,73 +91,61 @@ public class ClosestPair{
                 rightBound++;
                 System.out.println("right: "+rightBound);
             }
-            //hitta kordinaterna som ligger mindre än smallest från mitten
-//ALT 2
-//            for(int l = leftBound; plane.get(l).getX()>middleX-smallest && l>intervalStart; leftBound=l--)
-//            {System.out.println("l: "+l);
-//                System.out.println(plane.get(l).getX());}
-//            for(int r = rightBound; plane.get(r).getX()<middleX+smallest && r<=intervalEnd; rightBound=r++)
-//            {System.out.println("r: "+r);
-//                System.out.println(plane.get(r).getX());}
+
+            
+            /**
+            *Skapa listor för prickarna som ligger mindre än smallest ifrån middleX
+            *
+            */
+            ArrayList<Point> leftList = new ArrayList<Point>();
+            ArrayList<Point> rightList = new ArrayList<Point>();
+
+            for(int i=leftBound ; plane.get(i).getX()<=middleX; i++){
+                leftList.add(plane.get(i));
+            } 
+            Collections.sort(leftList, new CmpY());
+            for(int i=rightBound ; plane.get(i).getX()>middleX; i--){
+                rightList.add(plane.get(i));
+            } 
+            Collections.sort(rightList, new CmpY());
 
             /**
             *Jämför de till vänster med de till höger
-            *
             */
             double both=Double.MAX_VALUE;
-            
-            System.out.println("MERGE: ");
-            for(int i=leftBound ; plane.get(i).getX()<=middleX ;i++){
-                Point tmp = plane.get(i);
-                System.out.print("i: "+i );
-                System.out.print(plane.get(i)+" " );
-                for(int j = rightBound; plane.get(j).getX()>middleX; j--){
-                    System.out.print("j: "+j );
-                    System.out.print(plane.get(j) );
-                    
-                    if(Math.abs(tmp.getX()-plane.get(j).getX())>smallest )
-                       // || Math.abs(tmp.getY()-plane.get(j).getY())>smallest)
-                        {
-                        System.out.println("break ");
+            for(Point p : leftList){
+                for(Point q : rightList){
+                    if(Math.abs(p.y-q.y)>smallest){
                         break;
                     }
-                    double newDelta=getDistance(tmp, plane.get(j));
-                        System.out.print("no break ");
-                    if(newDelta<both){
+                    double newDelta=getDistance(p,q);
+                    if(newDelta<both)
                         both=newDelta;
-                        System.out.print("new delta ");
-                    }
-                    System.out.println("\n--end");
+                    
                 }
             }
 
-            //both= findClosestPair(leftBound,rightBound);
             if(both<smallest)
                 return both;
             else
                 return smallest;
         }
     }
+    /**
+    *Brute force algoritm för basecase och testning av algoritmen
+    */
     public double findClosestInInterval(int intervalStart, int intervalEnd){
         double delta=Double.MAX_VALUE;
         for(int i=intervalStart; i<intervalEnd+1; i++){
-            System.out.print("i: "+i );
-            System.out.print(plane.get(i)+" " );
             Point tmp = plane.get(i);
             for(int j = i+1; j<intervalEnd+1; j++ ){
-                System.out.print("j: "+j );
-                System.out.print(plane.get(j) );
                 if(Math.abs(tmp.getX()-plane.get(j).getX())>delta){
-                    System.out.println("break ");
                     break;
                 }
                 double newDelta=getDistance(tmp, plane.get(j));
-                System.out.print("no break ");
                 if(newDelta<delta){
                     delta=newDelta;
-                    System.out.print("new delta ");
                 }
-                System.out.println("\n--end");
             }
         }
         return delta;
@@ -174,6 +159,9 @@ public class ClosestPair{
         cp.addPoint(new Point(55,2000));
         cp.addPoint(new Point(42,9000));
         //System.out.println(cp.toString());        
+        double fcii1 = cp.findClosestInInterval(0,cp.getPlaneSize()-1);
+        System.out.println("\n----------");
+        System.out.println("kontroll : "+fcii1);
         double fcp = cp.findClosestPair();
         System.out.println("SVAR: "+fcp);
         System.out.println("\n----------");
