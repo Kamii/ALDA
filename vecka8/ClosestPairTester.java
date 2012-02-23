@@ -4,11 +4,6 @@ import java.util.*;
 
 import org.junit.*;
 public class ClosestPairTester{
-	@Before
-		public void setUp() 
-		{
-
-		}
 
 	@Test
 		public void testFindClosestPair() 
@@ -30,7 +25,6 @@ public class ClosestPairTester{
 	/**
 	 *   Testfall: (1,10) (100,10) (90, 300), (15, 700) , (55, 2000), (42, 9000)
 	 *   två koordinater som är långt ifrån varandra på x-axeln men ändå är närmast
-	 *
 	 */
 	@Test
 		public void testClosestPairFirstAndLast() 
@@ -83,17 +77,6 @@ public class ClosestPairTester{
 
 			for(int i = 0; i<10000; i++)
 				cp.addPoint(new Point(r.nextInt(10000), r.nextInt(10000)));
-			assertEquals(cp.findClosestInInterval(0,cp.getPlaneSize()-1), cp.findClosestPair(), 0.00);
-		}
-
-	@Test
-		public void randomTestr20000()
-		{
-			ClosestPair cp = new ClosestPair();
-			Random r = new Random();
-
-			for(int i = 0; i<20000; i++)
-				cp.addPoint(new Point(r.nextInt(100000), r.nextInt(100000)));
 			assertEquals(cp.findClosestInInterval(0,cp.getPlaneSize()-1), cp.findClosestPair(), 0.00);
 		}
 }
