@@ -155,18 +155,6 @@ public class ClosestPair{
 		}
 		return delta;
 	}
-
-	public static void main (String[]args)
-	{
-		ClosestPair cp = new ClosestPair();
-		Random r = new Random();
-
-		for(int i = 0; i<1000; i++)
-			cp.addPoint(new Point(r.nextInt(1000), r.nextInt(1000)));
-
-	cp.findClosestPair();
-//		cp.findClosestInInterval(0, cp.getPlaneSize()-1);
-	}
 }
 
 
