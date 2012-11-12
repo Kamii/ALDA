@@ -14,3 +14,7 @@ ALDA VT11
 *   Week 5: Password: FgH9sg6  
     * d-heap
     * Artikel om Hashing
+*   Week 6: Password: 
+*   Week 7: Password:
+*   Week 8: Password:
+*   Week 9: Password:
